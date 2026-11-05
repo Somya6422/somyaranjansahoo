@@ -289,6 +289,44 @@ LIMIT 10;</textarea>
         <h3 class="group-title" data-group="cases">Flagship projects</h3>
         <div class="cases">
 
+          <!-- SMART TOLL PLAZA -->
+          <article class="case" id="toll" data-cats="gis ai py">
+            <a class="case__media case__media--top zoom" href="assets/img/proj-toll-map-1520.webp" data-caption="Smart Toll Plaza: Pan-India GIS command center" data-video="assets/video/toll-anpr-loop.mp4">
+              <img src="assets/img/proj-toll-map-960.webp" srcset="assets/img/proj-toll-map-480.webp 480w, assets/img/proj-toll-map-720.webp 720w, assets/img/proj-toll-map-960.webp 960w, assets/img/proj-toll-map-1520.webp 1520w" sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1100px) 50vw, 540px" width="1520" height="1573" alt="Map of India with about two thousand toll plazas plotted as blue and orange dots, labelled 2,003 toll plazas mapped" loading="lazy" decoding="async">
+              <span class="badge badge--plain">Prototype · simulation</span>
+            </a>
+            <div class="case__body">
+              <p class="case__kicker">GIS &amp; computer vision · Solo project</p>
+              <h3>Smart Toll Plaza Management &amp; GIS Command Center</h3>
+              <p class="case__purpose">An NHAI-style toll operations prototype: live number-plate recognition, a Pan-India plaza map and role-based reporting.</p>
+              <ul class="chips chips--sm" aria-label="Technologies"><li>Python</li><li>Streamlit</li><li>FastALPR</li><li>OpenCV</li><li>WebRTC</li><li>Plotly</li><li>pandas</li></ul>
+              <details class="study">
+                <summary>Read the case study</summary>
+                <dl class="study__grid">
+                  <div><dt>Architecture</dt><dd>A Streamlit multipage app with four pages: sign-in, Live Camera, GIS Command Center and Analytics. A <code>CloudSQLAdapter</code> class stores transactions, security audits and shift closures in a JSON file, behind an interface meant to be swapped for a cloud SQL database later.</dd></div>
+                  <div><dt>Data flow</dt><dd>WebRTC camera frame → every third frame → FastALPR (YOLOv9 plate detector + MobileViT OCR) → confidence ≥ 0.50 → Indian plate-format check → blacklist screening or diplomatic exemption → simulated FASTag or cash charge → ledger and audit entry.</dd></div>
+                  <div><dt>Map &amp; analytics</dt><dd>A national toll-plaza registry (2,000+ rows) cleaned with pandas and plotted with Plotly's map view; analytics show payment mix and revenue by vehicle type; prices rise 1.15× in peak hours.</dd></div>
+                  <div><dt>Hardest problem</dt><dd>Making a demo that runs on any machine. The data adapter needs no cloud credentials, and plate validation accepts standard, Bharat-series and diplomatic plates while throwing out OCR noise.</dd></div>
+                  <div><dt>Scope</dt><dd>It's a simulation for learning and demos, and it isn't connected to live FASTag, VAHAN or NHAI systems. It grew out of my Class XII toll-management project.</dd></div>
+                </dl>
+                <div class="study__gallery study__gallery--wide">
+                  <a class="zoom" href="assets/img/proj-toll-pipeline-1480.webp" data-caption="The live ANPR checkout pipeline"><img src="assets/img/proj-toll-pipeline-960.webp" srcset="assets/img/proj-toll-pipeline-480.webp 480w, assets/img/proj-toll-pipeline-720.webp 720w, assets/img/proj-toll-pipeline-960.webp 960w, assets/img/proj-toll-pipeline-1480.webp 1480w" sizes="(max-width: 760px) calc(100vw - 64px), 500px" width="1480" height="480" alt="Diagram of the eight-step ANPR checkout pipeline: capture, detect, read, validate, screen, exempt, charge, record" loading="lazy" decoding="async"></a>
+                </div>
+                <div class="study__gallery">
+                  <a class="zoom" href="assets/img/proj-toll-anpr-1600.webp" data-caption="Live camera: a plate locked and priced by vehicle class"><img src="assets/img/proj-toll-anpr-960.webp" srcset="assets/img/proj-toll-anpr-480.webp 480w, assets/img/proj-toll-anpr-960.webp 960w, assets/img/proj-toll-anpr-1600.webp 1600w" sizes="(max-width: 760px) 45vw, 240px" width="1600" height="900" alt="Live ANPR screen with a plate locked at 99 percent and a ₹100 tariff" loading="lazy" decoding="async"></a>
+                  <a class="zoom" href="assets/img/proj-toll-alert-1600.webp" data-caption="Live camera: a blacklisted plate raises a security alert"><img src="assets/img/proj-toll-alert-960.webp" srcset="assets/img/proj-toll-alert-480.webp 480w, assets/img/proj-toll-alert-960.webp 960w, assets/img/proj-toll-alert-1600.webp 1600w" sizes="(max-width: 760px) 45vw, 240px" width="1600" height="900" alt="Live ANPR screen showing a security alert for a stolen vehicle" loading="lazy" decoding="async"></a>
+                  <a class="zoom" href="assets/img/proj-toll-analytics-1600.webp" data-caption="Analytics: payment mix, revenue by vehicle class and daily trend"><img src="assets/img/proj-toll-analytics-960.webp" srcset="assets/img/proj-toll-analytics-480.webp 480w, assets/img/proj-toll-analytics-960.webp 960w, assets/img/proj-toll-analytics-1600.webp 1600w" sizes="(max-width: 760px) 45vw, 240px" width="1600" height="900" alt="Analytics charts for FASTag adoption and revenue by vehicle class" loading="lazy" decoding="async"></a>
+                  <a class="zoom" href="assets/img/proj-toll-shift-1600.webp" data-caption="Shift closure: a cash shortage flagged for review"><img src="assets/img/proj-toll-shift-960.webp" srcset="assets/img/proj-toll-shift-480.webp 480w, assets/img/proj-toll-shift-960.webp 960w, assets/img/proj-toll-shift-1600.webp 1600w" sizes="(max-width: 760px) 45vw, 240px" width="1600" height="900" alt="End of shift cash reconciliation with a negative variance flagged" loading="lazy" decoding="async"></a>
+                </div>
+              </details>
+              <p class="case__links">
+                <a class="btn btn--ghost btn--sm" href="assets/video/toll-demo.mp4" data-play data-caption="Smart Toll Plaza full demo, with simulated data">Watch the demo</a>
+                <a class="btn btn--ghost btn--sm" href="https://github.com/Somya6422/smart-toll-plaza-system" target="_blank" rel="noopener noreferrer">Source code</a>
+                <a class="link" href="#toll-analysis">See the data analysis</a>
+              </p>
+            </div>
+          </article>
+
           <!-- VANTAGE: ZERO -->
           <article class="case" id="vantage" data-cats="web rec">
             <a class="case__media zoom" href="assets/img/proj-vantage-800.webp" data-caption="VANTAGE: ZERO, in-game screenshot" data-video="assets/video/vantage-loop.mp4">
@@ -387,43 +425,6 @@ LIMIT 10;</textarea>
               <p class="case__links">
                 <a class="btn btn--ghost btn--sm" href="https://github.com/Somya6422/unspoken" target="_blank" rel="noopener noreferrer">Source code</a>
                 <a class="link" href="https://www.linkedin.com/feed/update/urn:li:activity:7507854814798868480/" target="_blank" rel="noopener noreferrer">CHAKRAVYUH post ↗</a>
-              </p>
-            </div>
-          </article>
-
-          <!-- SMART TOLL PLAZA -->
-          <article class="case" id="toll" data-cats="gis ai py">
-            <a class="case__media case__media--top zoom" href="assets/img/proj-toll-map-1520.webp" data-caption="Smart Toll Plaza: Pan-India GIS command center" data-video="assets/video/toll-anpr-loop.mp4">
-              <img src="assets/img/proj-toll-map-960.webp" srcset="assets/img/proj-toll-map-480.webp 480w, assets/img/proj-toll-map-720.webp 720w, assets/img/proj-toll-map-960.webp 960w, assets/img/proj-toll-map-1520.webp 1520w" sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1100px) 50vw, 540px" width="1520" height="1573" alt="Map of India with about two thousand toll plazas plotted as blue and orange dots, labelled 2,003 toll plazas mapped" loading="lazy" decoding="async">
-              <span class="badge badge--plain">Prototype · simulation</span>
-            </a>
-            <div class="case__body">
-              <p class="case__kicker">GIS &amp; computer vision · Solo project</p>
-              <h3>Smart Toll Plaza Management &amp; GIS Command Center</h3>
-              <p class="case__purpose">An NHAI-style toll operations prototype: live number-plate recognition, a Pan-India plaza map and role-based reporting.</p>
-              <ul class="chips chips--sm" aria-label="Technologies"><li>Python</li><li>Streamlit</li><li>FastALPR</li><li>OpenCV</li><li>WebRTC</li><li>Plotly</li><li>pandas</li></ul>
-              <details class="study">
-                <summary>Read the case study</summary>
-                <dl class="study__grid">
-                  <div><dt>Architecture</dt><dd>A Streamlit multipage app with four pages: sign-in, Live Camera, GIS Command Center and Analytics. A <code>CloudSQLAdapter</code> class stores transactions, security audits and shift closures in a JSON file, behind an interface meant to be swapped for a cloud SQL database later.</dd></div>
-                  <div><dt>Data flow</dt><dd>WebRTC camera frame → every third frame → FastALPR (YOLOv9 plate detector + MobileViT OCR) → confidence ≥ 0.50 → Indian plate-format check → blacklist screening or diplomatic exemption → simulated FASTag or cash charge → ledger and audit entry.</dd></div>
-                  <div><dt>Map &amp; analytics</dt><dd>A national toll-plaza registry (2,000+ rows) cleaned with pandas and plotted with Plotly's map view; analytics show payment mix and revenue by vehicle type; prices rise 1.15× in peak hours.</dd></div>
-                  <div><dt>Hardest problem</dt><dd>Making a demo that runs on any machine. The data adapter needs no cloud credentials, and plate validation accepts standard, Bharat-series and diplomatic plates while throwing out OCR noise.</dd></div>
-                  <div><dt>Scope</dt><dd>It's a simulation for learning and demos, and it isn't connected to live FASTag, VAHAN or NHAI systems. It grew out of my Class XII toll-management project.</dd></div>
-                </dl>
-                <div class="study__gallery study__gallery--wide">
-                  <a class="zoom" href="assets/img/proj-toll-pipeline-1480.webp" data-caption="The live ANPR checkout pipeline"><img src="assets/img/proj-toll-pipeline-960.webp" srcset="assets/img/proj-toll-pipeline-480.webp 480w, assets/img/proj-toll-pipeline-720.webp 720w, assets/img/proj-toll-pipeline-960.webp 960w, assets/img/proj-toll-pipeline-1480.webp 1480w" sizes="(max-width: 760px) calc(100vw - 64px), 500px" width="1480" height="480" alt="Diagram of the eight-step ANPR checkout pipeline: capture, detect, read, validate, screen, exempt, charge, record" loading="lazy" decoding="async"></a>
-                </div>
-                <div class="study__gallery">
-                  <a class="zoom" href="assets/img/proj-toll-anpr-1600.webp" data-caption="Live camera: a plate locked and priced by vehicle class"><img src="assets/img/proj-toll-anpr-960.webp" srcset="assets/img/proj-toll-anpr-480.webp 480w, assets/img/proj-toll-anpr-960.webp 960w, assets/img/proj-toll-anpr-1600.webp 1600w" sizes="(max-width: 760px) 45vw, 240px" width="1600" height="900" alt="Live ANPR screen with a plate locked at 99 percent and a ₹100 tariff" loading="lazy" decoding="async"></a>
-                  <a class="zoom" href="assets/img/proj-toll-alert-1600.webp" data-caption="Live camera: a blacklisted plate raises a security alert"><img src="assets/img/proj-toll-alert-960.webp" srcset="assets/img/proj-toll-alert-480.webp 480w, assets/img/proj-toll-alert-960.webp 960w, assets/img/proj-toll-alert-1600.webp 1600w" sizes="(max-width: 760px) 45vw, 240px" width="1600" height="900" alt="Live ANPR screen showing a security alert for a stolen vehicle" loading="lazy" decoding="async"></a>
-                  <a class="zoom" href="assets/img/proj-toll-analytics-1600.webp" data-caption="Analytics: payment mix, revenue by vehicle class and daily trend"><img src="assets/img/proj-toll-analytics-960.webp" srcset="assets/img/proj-toll-analytics-480.webp 480w, assets/img/proj-toll-analytics-960.webp 960w, assets/img/proj-toll-analytics-1600.webp 1600w" sizes="(max-width: 760px) 45vw, 240px" width="1600" height="900" alt="Analytics charts for FASTag adoption and revenue by vehicle class" loading="lazy" decoding="async"></a>
-                  <a class="zoom" href="assets/img/proj-toll-shift-1600.webp" data-caption="Shift closure: a cash shortage flagged for review"><img src="assets/img/proj-toll-shift-960.webp" srcset="assets/img/proj-toll-shift-480.webp 480w, assets/img/proj-toll-shift-960.webp 960w, assets/img/proj-toll-shift-1600.webp 1600w" sizes="(max-width: 760px) 45vw, 240px" width="1600" height="900" alt="End of shift cash reconciliation with a negative variance flagged" loading="lazy" decoding="async"></a>
-                </div>
-              </details>
-              <p class="case__links">
-                <a class="btn btn--ghost btn--sm" href="assets/video/toll-demo.mp4" data-play data-caption="Smart Toll Plaza full demo, with simulated data">Watch the demo</a>
-                <a class="btn btn--ghost btn--sm" href="https://github.com/Somya6422/smart-toll-plaza-system" target="_blank" rel="noopener noreferrer">Source code</a>
               </p>
             </div>
           </article>
