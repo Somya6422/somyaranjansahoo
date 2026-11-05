@@ -35,6 +35,10 @@ Then open http://localhost:4321.
 
 Every push to `main` then updates the site. The repository must stay public on a free GitHub plan.
 
+### Desktop view on every device
+
+The `viewport` tag in each page is `width=1200`, so phones and tablets lay the site out at desktop width and zoom out to fit. Visitors can pinch to zoom. To go back to the phone layout, set it to `width=device-width, initial-scale=1` in `index.html`, `privacy.html` and `404.html`.
+
 ### What differs from a server you control
 
 - GitHub Pages cannot send custom headers, so the Content-Security-Policy lives in a `<meta>` tag at the top of each page. Change an inline `<script>` and its `sha256` hash in that tag must change too. `frame-ancestors` and `X-Frame-Options` have no equivalent there.
