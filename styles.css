@@ -1195,6 +1195,12 @@ p, li, dd { text-wrap: pretty; }
 /* =========================================================
    Startup "live build": blueprint + hand cursor placing elements
    ========================================================= */
+/* Phones skip the 3D hands: the hero settles in under a second instead. */
+.intro-lite .stage :is(.stage__word, .status, .role, #hero-title, .lede, .stage__rail, .hero__cta, .socials) { animation: heroIn .45s var(--ease) both; }
+.intro-lite .stage :is(.role, #hero-title) { animation-delay: .08s; }
+.intro-lite .stage :is(.lede, .stage__rail) { animation-delay: .16s; }
+.intro-lite .stage :is(.hero__cta, .socials) { animation-delay: .24s; }
+@keyframes heroIn { from { opacity: 0; translate: 0 12px; } }
 .build-on body { overflow: hidden; }
 /* Before script.js takes over, keep the hero pieces hidden so nothing jumps. */
 .build-on .stage:not(.bp-live) :is(.stage__word, #hero-title, .stage__rail, .status, .role, .lede, .hero__cta, .socials, .stage__scroll) { opacity: 0; }
