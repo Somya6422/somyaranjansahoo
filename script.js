@@ -2144,6 +2144,39 @@
     document.head.appendChild(va);
   }
 
+  // Gallery: a short curated mosaic first, event filters and "show all" for the rest.
+  (function moments() {
+    var grid = $('momentGrid'), bar = $('momentFilters'), more = $('momentMore');
+    if (!grid || !bar || !more) return;
+    var FIRST = 7; // fills three full rows of the mosaic
+    var items = Array.prototype.slice.call(grid.querySelectorAll('.moments__item'));
+    var buttons = Array.prototype.slice.call(bar.querySelectorAll('.filter'));
+    var expanded = false;
+    function count(set) { return set === 'all' ? items.length : items.filter(function (i) { return i.getAttribute('data-set') === set; }).length; }
+    function apply(set) {
+      var all = set === 'all';
+      if (all) grid.removeAttribute('data-set'); else grid.setAttribute('data-set', set);
+      items.forEach(function (it, n) {
+        var on = all ? (expanded || n < FIRST) : it.getAttribute('data-set') === set;
+        it.classList.toggle('is-hidden', !on);
+      });
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-set') === set)); });
+      more.hidden = !all || expanded;
+    }
+    buttons.forEach(function (b) {
+      b.querySelector('.filter__n').textContent = count(b.getAttribute('data-set'));
+      b.addEventListener('click', function () { apply(b.getAttribute('data-set')); });
+    });
+    more.textContent = 'Show all ' + items.length + ' moments';
+    more.addEventListener('click', function () {
+      expanded = true;
+      apply('all');
+      if (items[FIRST]) items[FIRST].focus();
+    });
+    bar.hidden = false;
+    apply('all');
+  })();
+
   var year = $('year');
   if (year) year.textContent = new Date().getFullYear();
 })();
