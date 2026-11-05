@@ -117,7 +117,7 @@
   if (finding && topArea) {
     var lead = document.createElement('strong'); lead.textContent = 'Main finding:';
     finding.appendChild(lead);
-    finding.appendChild(document.createTextNode(' ' + byArea[topArea] + ' of my ' + creds.length + ' certificates are in ' + topArea + ', the area I have put the most study into so far.'));
+    finding.appendChild(document.createTextNode(' ' + byArea[topArea] + ' of my ' + creds.length + ' certificates are in ' + topArea + ', my largest group so far.'));
     finding.hidden = false;
   }
   if ($('chartLangs') && window.__ghRepos) window.__ghRepos().then(function (list) {
