@@ -25,6 +25,17 @@ http.createServer((req, res) => {
       headers['Content-Encoding'] = 'gzip';
       data = zlib.gzipSync(data);
     }
+    // Video players ask for byte ranges, and Vercel answers them.
+    const range = /^bytes=(\d+)-(\d*)$/.exec(req.headers.range || '');
+    if (range && type.startsWith('video/')) {
+      const start = +range[1], end = Math.min(range[2] ? +range[2] : data.length - 1, data.length - 1);
+      if (start > end) { res.writeHead(416, { 'Content-Range': 'bytes */' + data.length }); return res.end(); }
+      headers['Accept-Ranges'] = 'bytes';
+      headers['Content-Range'] = 'bytes ' + start + '-' + end + '/' + data.length;
+      res.writeHead(206, headers);
+      return res.end(data.subarray(start, end + 1));
+    }
+    if (type.startsWith('video/')) headers['Accept-Ranges'] = 'bytes';
     res.writeHead(200, headers);
     res.end(data);
   });
