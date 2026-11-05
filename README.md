@@ -8,18 +8,16 @@ A static, dependency-free portfolio site (HTML, CSS and vanilla JavaScript). No 
 |---|---|
 | `index.html` | The portfolio page (hero, selected work and case studies, about, experience, credentials, contact) |
 | `privacy.html` | Privacy notice for the contact form |
-| `404.html` | Not-found page (used automatically by Vercel) |
+| `404.html` | Not-found page (used automatically by GitHub Pages) |
 | `styles.css` | All styles, light and dark themes |
-| `script.js` | Theme, navigation, project filters, contact form, image viewer, analytics loader |
+| `script.js` | Theme, navigation, project filters, contact form, image viewer |
 | `assets/img/*.webp` | Responsive images (480/720/960/1600 px widths) built from the original photos and screenshots |
 | `assets/Somya-Ranjan-Sahoo-Resume.pdf` | Resume (generated from `resume/resume.html`) |
 | `assets/og-image.jpg` | Link-preview image |
-| `vercel.json` | Clean URLs, security headers (CSP etc.) and caching |
-| `robots.txt` | Search-engine rules |
-| `dev-server.js` | Local server that applies the same headers as `vercel.json` (not deployed) |
-| `resume/resume.html` | Source for the resume PDF (not deployed) |
-
-`.vercelignore` keeps `resume/`, `dev-server.js`, `run-local.bat` and this README out of the deployment.
+| `.nojekyll` | Tells GitHub Pages to serve the files as they are |
+| `robots.txt`, `sitemap.xml` | Search-engine rules and page list |
+| `dev-server.js` | Local preview server |
+| `resume/` | Source for the resume PDFs (local only, ignored by git) |
 
 ## Run locally
 
@@ -27,29 +25,26 @@ A static, dependency-free portfolio site (HTML, CSS and vanilla JavaScript). No 
 node dev-server.js
 ```
 
-Then open http://localhost:4321. (Opening `index.html` directly from disk also works, but the security headers and clean URLs only apply through the server.)
+Then open http://localhost:4321.
 
-## Deploy (Vercel)
+## Deploy (GitHub Pages)
 
-1. Push this folder to a GitHub repository (or run `vercel deploy --prod` from this folder with the Vercel CLI).
-2. Import the repository in Vercel. Framework preset: **Other**. No build command, output directory = project root.
-3. Vercel serves the site over **HTTPS** automatically on its `*.vercel.app` domain and on any custom domain you add (it issues the certificate). Check the padlock in the browser after the first deploy.
-4. **Web Analytics:** in the Vercel dashboard open the project → Analytics → Enable. `script.js` already loads `/_vercel/insights/script.js` on the live https site (it is skipped on localhost).
+1. On GitHub open the repository, then **Settings > Pages**.
+2. Under **Build and deployment**, set **Source** to *Deploy from a branch*, **Branch** to `main` and the folder to `/ (root)`, then **Save**.
+3. After a minute or two the site is live at https://somya6422.github.io/somyaranjansahoo/
 
-### After you know the production domain
+Every push to `main` then updates the site. The repository must stay public on a free GitHub plan.
 
-Replace `YOUR-DOMAIN` below and add these:
+### What differs from a server you control
 
-- In `index.html` `<head>`: `<link rel="canonical" href="https://YOUR-DOMAIN/">` and change `og:image` to `https://YOUR-DOMAIN/assets/og-image.jpg` (link previews need an absolute URL).
-- Create `sitemap.xml`:
-  ```xml
-  <?xml version="1.0" encoding="UTF-8"?>
-  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url><loc>https://YOUR-DOMAIN/</loc></url>
-    <url><loc>https://YOUR-DOMAIN/privacy</loc></url>
-  </urlset>
-  ```
-- Uncomment the `Sitemap:` line in `robots.txt`, then submit the site in Google Search Console.
+- GitHub Pages cannot send custom headers, so the Content-Security-Policy lives in a `<meta>` tag at the top of each page. Change an inline `<script>` and its `sha256` hash in that tag must change too. `frame-ancestors` and `X-Frame-Options` have no equivalent there.
+- There is no built-in analytics.
+
+### Moving to a custom domain later
+
+1. Register the domain, then add it under **Settings > Pages > Custom domain** and follow the DNS records GitHub shows.
+2. Replace the `somya6422.github.io/somyaranjansahoo` address in `index.html`, `robots.txt`, `sitemap.xml` and the resume sources.
+3. Change `<base href="/somyaranjansahoo/">` in `404.html` to `<base href="/">`.
 
 ## Contact form (FormSubmit)
 
@@ -58,7 +53,7 @@ The form posts to [FormSubmit](https://formsubmit.co), which emails submissions 
 - **One-time activation:** the first submission makes FormSubmit send an activation email to that inbox. Click the link in it once. Until then, submissions are not delivered — the form shows an error with a "email me directly" fallback, never a false success.
 - **Optional:** after activation FormSubmit gives you a random alias. Replace the email in the form's `action` and `data-endpoint` with that alias to keep the address out of the HTML.
 - **Spam protection:** a hidden honeypot field (`_honey`) plus required consent and validation. Without JavaScript the form still works as a normal POST (FormSubmit then shows its own captcha page).
-- To switch providers, change `action` and `data-endpoint` on `#contactForm` in `index.html`, and `connect-src` / `form-action` in `vercel.json`, and update `privacy.html`.
+- To switch providers, change `action` and `data-endpoint` on `#contactForm` in `index.html`, and `connect-src` / `form-action` in the Content-Security-Policy tag of each page, and update `privacy.html`.
 
 ## Resume
 
