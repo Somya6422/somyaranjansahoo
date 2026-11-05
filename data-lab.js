@@ -165,6 +165,12 @@
     t.appendChild(tb); wrap.appendChild(t); out.appendChild(wrap);
     out.appendChild(el('p', 'sql__count', r.total + (r.total === 1 ? ' row' : ' rows') + (r.total > 100 ? ', showing the first 100' : '')));
   }
+  // The database is read-only; this also stops the commands that could switch that off.
+  function blocked(q) {
+    var code = q.replace(/'(?:[^']|'')*'|"(?:[^"]|"")*"|--[^\n]*|\/\*[\s\S]*?\*\//g, ' ');
+    return /\b(pragma|attach|detach|vacuum|reindex)\b/i.test(code);
+  }
+  var READ_ONLY = 'This playground is read-only, so only SELECT queries run. Try an example above.';
   function ask(q) {
     return new Promise(function (done) {
       var timer = setTimeout(function () {
@@ -180,6 +186,7 @@
       worker.onmessage = function (e) {
         clearTimeout(timer);
         if (e.data.type === 'result') show(e.data.result);
+        else if (/readonly/i.test(e.data.message)) say(READ_ONLY, 'is-hint');
         else say('That query didn’t run: ' + e.data.message + '. Check the table and column names listed below, or try an example.', 'is-hint');
         done();
       };
@@ -190,6 +197,7 @@
     var q = input.value.trim();
     if (!q) return say('Type a query first, or pick an example above.');
     if (run.disabled) return;
+    if (blocked(q)) return say(READ_ONLY, 'is-hint');
     run.disabled = true;
     start().then(function () { return ask(q); })
       .catch(function () { stop(); say('The database couldn’t start just now. Reload the page and try again.', 'is-hint'); })

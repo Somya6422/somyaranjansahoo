@@ -14,6 +14,7 @@ function load(m) {
       s.free();
     });
     db.run('COMMIT');
+    db.run('PRAGMA query_only = ON'); // visitors can read everything and change nothing
   });
 }
 
