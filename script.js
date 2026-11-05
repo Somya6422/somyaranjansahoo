@@ -2103,9 +2103,10 @@
   }
 
   // ---- Demo clips: a project card with data-video plays a short muted loop while it is on screen ----
-  var saveData = navigator.connection && navigator.connection.saveData;
+  var conn = navigator.connection;
+  var lowData = conn && (conn.saveData || /2g|3g/.test(conn.effectiveType || '')); // keep slow mobile data for the page itself
   var clips = document.querySelectorAll('[data-video]');
-  if (clips.length && !reduceMotion && !saveData && 'IntersectionObserver' in window) {
+  if (clips.length && !reduceMotion && !lowData && 'IntersectionObserver' in window) {
     var vio = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         var m = en.target, v = m.querySelector('video');
