@@ -6,7 +6,7 @@ const path = require('path');
 const zlib = require('zlib');
 const root = path.resolve(process.argv[2] || __dirname);
 const port = Number(process.argv[3] || 4321);
-const types = { '.wasm': 'application/wasm', '.py': 'text/plain; charset=utf-8', '.sql': 'text/plain; charset=utf-8', '.csv': 'text/plain; charset=utf-8', '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json', '.pdf': 'application/pdf', '.txt': 'text/plain' };
+const types = { '.wasm': 'application/wasm', '.py': 'text/plain; charset=utf-8', '.sql': 'text/plain; charset=utf-8', '.csv': 'text/plain; charset=utf-8', '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json', '.pdf': 'application/pdf', '.mp4': 'video/mp4', '.txt': 'text/plain' };
 const cfg = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'));
 const rules = (cfg.headers || []).map(r => ({ re: new RegExp('^' + r.source.replace(/\(\.\*\)/g, '(.*)') + '$'), headers: r.headers }));
 http.createServer((req, res) => {
