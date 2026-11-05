@@ -308,6 +308,18 @@
   var startHash = location.hash;
   // A malformed link (#%E0%A4) must not throw, so decode it safely.
   function hashId(h) { try { return decodeURIComponent(h.slice(1)); } catch (e) { return h.slice(1); } }
+  // Sections render lazily, so a smooth scroll aims at an estimated height and stops short of far targets.
+  // Land directly, then re-aim while the sections in between settle.
+  function landOn(el, block) {
+    var opt = { behavior: 'instant', block: block || 'start' };
+    el.scrollIntoView(opt);
+    [120, 320, 700].forEach(function (ms) {
+      setTimeout(function () {
+        var t = el.getBoundingClientRect().top;
+        if (t < 0 || t > (block === 'center' ? window.innerHeight * 0.7 : 160)) el.scrollIntoView(opt);
+      }, ms);
+    });
+  }
   var pace = 1;
   if (building) { try { if (sessionStorage.getItem('intro:seen') === '1') pace = 0.32; sessionStorage.setItem('intro:seen', '1'); } catch (e) {} }
   if (building) whenVisible(function () { whenReady(function () {
@@ -404,7 +416,7 @@
         if (window.__showCred) window.__showCred(hashId(startHash));
         var target = document.getElementById(hashId(startHash));
         // a deep link lands instantly (no smooth scroll through every section); sections settle their heights as they render, so re-aim twice
-        if (target) [60, 260, 600].forEach(function (ms, i) { setTimeout(function () { var t = target.getBoundingClientRect().top; if (!i || t < 0 || t > 160) target.scrollIntoView({ behavior: 'instant' }); }, ms); });
+        if (target) setTimeout(function () { landOn(target); }, 60);
       }
     }
     function userSkip(e) {
@@ -1311,7 +1323,7 @@
   function tLine(text, cls) { var d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; tOut.appendChild(d); tOut.scrollTop = tOut.scrollHeight; return d; }
   function tLink(label, href) { var d = document.createElement('div'); var a = document.createElement('a'); a.href = href; a.textContent = label; if (/^http/.test(href)) { a.target = '_blank'; a.rel = 'noopener noreferrer'; } d.appendChild(a); tOut.appendChild(d); }
   function txt(sel) { var e = document.querySelector(sel); return e ? e.textContent.replace(/\s+/g, ' ').trim() : ''; }
-  function goTo(id) { term.close(); var s = $(id); if (s) setTimeout(function () { s.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }); }, 60); }
+  function goTo(id) { term.close(); var s = $(id); if (s) setTimeout(function () { landOn(s); }, 60); }
   var projs = function () { return Array.prototype.slice.call(document.querySelectorAll('#work [data-cats]')); };
   var CMDS = {
     help: function () { tLine('Commands:'); [['whoami', 'who I am'], ['about', 'the short story'], ['projects', 'list my projects'], ['open <n>', 'jump to project n'], ['skills', 'what I work with'], ['experience', 'internships'], ['education', 'where I studied'], ['certs', 'certificates & badges'], ['resume [placement]', 'download my resume'], ['contact', 'how to reach me'], ['socials', 'profiles'], ['ls / cd <section>', 'browse sections'], ['theme [light|dark]', 'switch theme'], ['clear', 'clear the screen'], ['replay', 'replay the intro'], ['exit', 'close']].forEach(function (c) { tLine('  ' + (c[0] + '                  ').slice(0, 19) + c[1]); }); },
@@ -1430,7 +1442,7 @@
   document.body.appendChild(cmdk);
   var cIn = $('cmdkIn'), cList = $('cmdkList'), cItems = [], cShown = [], cActive = 0, cmdkOpener = null;
   function flash(el) { el.classList.remove('is-flash'); void el.offsetWidth; el.classList.add('is-flash'); }
-  function scrollToEl(el) { setTimeout(function () { el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' }); flash(el); }, 80); }
+  function scrollToEl(el) { setTimeout(function () { landOn(el, 'center'); flash(el); }, 80); }
   function buildItems() {
     var it = [];
     var act = function (label, hint, fn, kw) { it.push({ g: 'Actions', label: label, hint: hint, run: fn, kw: kw || '' }); };
@@ -1444,7 +1456,7 @@
     });
     act('Replay the intro', 'Reload the page', function () { location.reload(); }, 'animation hands');
     [['work', 'Work'], ['data', 'Data lab'], ['about', 'About'], ['experience', 'Experience'], ['credentials', 'Credentials'], ['resume', 'Resume'], ['contact', 'Contact']].forEach(function (s) {
-      it.push({ g: 'Sections', label: s[1], hint: 'Section', run: function () { var el = $(s[0]); if (el) el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }); } });
+      it.push({ g: 'Sections', label: s[1], hint: 'Section', run: function () { var el = $(s[0]); if (el) landOn(el); } });
     });
     projs().forEach(function (p) {
       var kind = (p.querySelector('.case__kicker') || p.querySelector('.tag') || {}).textContent || '';
@@ -2006,7 +2018,7 @@
     { g: 'Actions', label: 'Replay the intro', hint: 'Watch the hands build the page', run: replayIntro, kw: 'intro animation again restart hands' },
     { g: 'Actions', label: '60-second summary', hint: 'For recruiters', run: function () { openQuickView(); }, kw: 'recruiter quick view overview' },
     { g: 'Actions', label: 'Turn sounds on / off', hint: 'Off by default', run: function () { soundBtn.click(); }, kw: 'audio mute' },
-    { g: 'Actions', label: 'Hackathon journey map', hint: 'Section', run: function () { var s = $('journey'); if (s) s.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }); }, kw: 'map cities india' }
+    { g: 'Actions', label: 'Hackathon journey map', hint: 'Section', run: function () { var s = $('journey'); if (s) landOn(s); }, kw: 'map cities india' }
   ];
 
   // ---- Resume vault: two versions, only the top of each is previewed ----
@@ -2171,6 +2183,20 @@
     va.src = '/_vercel/insights/script.js';
     document.head.appendChild(va);
   }
+
+  // In-page links: nearby targets keep the smooth scroll, far ones land directly (see landOn).
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || a.closest('dialog')) return;
+    var h = a.getAttribute('href');
+    if (h.length < 2 || /^#project\//.test(h)) return;
+    var el = document.getElementById(hashId(h));
+    if (!el || Math.abs(el.getBoundingClientRect().top) < window.innerHeight * 1.5) return;
+    e.preventDefault();
+    history.pushState(null, '', h);
+    landOn(el);
+  });
 
   // Gallery: a short curated mosaic first, event filters and "show all" for the rest.
   (function moments() {
