@@ -2345,15 +2345,24 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
 .term__links a { color: #7dd3fc; }
 
 /* Moments: photos from the hackathon journey */
-.moments { margin-top: 40px; }
+.moments { margin-top: 40px; container-type: inline-size; }
 .moments__title { margin: 0 0 14px; font: 600 1.05rem/1.2 var(--font-display); }
-.moments__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-.moments__item { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); cursor: zoom-in; }
+.moments__filters { margin-bottom: 14px; }
+.moments__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-flow: dense; grid-auto-rows: 190px; grid-auto-rows: calc((100cqw - 36px) * .1875); gap: 12px; }
+.moments__item { position: relative; display: block; min-height: 0; overflow: hidden; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); cursor: zoom-in; }
 .moments__item img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
 .moments__item span { position: absolute; inset: auto 0 0; padding: 22px 10px 8px; font: 600 .78rem/1.25 var(--font-body); color: #fff; background: linear-gradient(transparent, rgba(0, 0, 0, .78)); }
 .moments__item:hover img { transform: scale(1.04); }
 .moments__item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-@media (max-width: 760px) { .moments__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } }
+.moments__item--big { grid-column: span 2; grid-row: span 2; }
+.moments__item--wide, .moments__grid[data-set] [data-fw] { grid-column: span 2; }
+.moments__item--tall { grid-row: span 2; }
+.moments__item--low img { object-position: 50% 85%; }
+.moments__foot { margin: 14px 0 0; text-align: center; }
+.moments__foot:has(> [hidden]) { display: none; }
+@media (max-width: 760px) {
+  .moments__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 130px; grid-auto-rows: calc((100cqw - 8px) * .375); gap: 8px; }
+}
 
 /* Demo clips also play on the smaller cards; the whole frame stays visible */
 [data-video] { position: relative; }
