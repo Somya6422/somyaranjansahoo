@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# After deployment, add the sitemap with your real domain, e.g.:
-# Sitemap: https://YOUR-DOMAIN/sitemap.xml
+Sitemap: https://somya6422.github.io/somyaranjansahoo/sitemap.xml
