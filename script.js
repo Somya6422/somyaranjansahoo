@@ -2124,15 +2124,6 @@
     Array.prototype.forEach.call(document.querySelectorAll('#askChips .ask__chip'), function (c) { c.addEventListener('click', function () { askEarly(c.textContent); }); });
   }
 
-  // ---- Analytics events (Vercel Web Analytics; does nothing on localhost) ----
-  function track(name, data) { try { if (window.va) window.va('event', { name: name, data: data }); } catch (e) {} }
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest && e.target.closest('a[href$=".pdf"]');
-    if (!a) return;
-    var where = a.closest('#resume') ? 'resume section' : a.closest('.stage, .hero') ? 'hero' : a.closest('.footer') ? 'footer' : a.closest('#contact') ? 'contact' : a.closest('#qv') ? 'quick view' : a.isConnected && a.parentNode === document.body ? 'command' : 'page';
-    track('Resume download', { version: /Placement/i.test(a.getAttribute('href')) ? 'Placement' : 'Developer', from: where });
-  }, true);
-
   // ---- Share this portfolio: QR code (drawn on demand) + share buttons ----
   var share = $('share');
   if (share) {
@@ -2146,15 +2137,12 @@
     var copyLink = function () {
       var done = function () { copyBtn.textContent = 'Link copied ✓'; setTimeout(function () { copyBtn.textContent = 'Copy link'; }, 2000); };
       if (navigator.clipboard) navigator.clipboard.writeText(shareUrl).then(done, function () {});
-      track('Share', { via: 'copy' });
     };
     copyBtn.addEventListener('click', copyLink);
     $('shareBtn').addEventListener('click', function () {
-      if (navigator.share) navigator.share({ title: document.title, text: shareText, url: shareUrl }).then(function () { track('Share', { via: 'native' }); }, function () {});
+      if (navigator.share) navigator.share({ title: document.title, text: shareText, url: shareUrl }).catch(function () {});
       else copyLink();
     });
-    $('shareWa').addEventListener('click', function () { track('Share', { via: 'whatsapp' }); });
-    $('shareLi').addEventListener('click', function () { track('Share', { via: 'linkedin' }); });
     // the QR encoder (24 KB) loads only when the footer comes near
     var drawQr = function () {
       var sc = document.createElement('script');
@@ -2195,15 +2183,6 @@
       });
     }, { threshold: 0.35 });
     Array.prototype.forEach.call(clips, function (c) { vio.observe(c); });
-  }
-
-  // ---- Vercel Web Analytics: only on the deployed https site, never inside the preview frame ----
-  if (!embedded && location.protocol === 'https:' && !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) {
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-    var va = document.createElement('script');
-    va.defer = true;
-    va.src = '/_vercel/insights/script.js';
-    document.head.appendChild(va);
   }
 
   // In-page links: nearby targets keep the smooth scroll, far ones land directly (see landOn).

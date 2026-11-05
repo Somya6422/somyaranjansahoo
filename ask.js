@@ -376,8 +376,6 @@
       input.value = '';
       var r = reply(q, state);
       if (window.__sfx) window.__sfx('tick');
-      // only the topic is counted, never the words someone typed
-      try { if (window.va) window.va('event', { name: 'Ask', data: { topic: r.topic } }); } catch (e) {}
       if (reduce) return say(r);
       var dots = el('div', 'ask__msg ask__msg--me ask__typing'); dots.setAttribute('aria-hidden', 'true');
       dots.appendChild(el('i')); dots.appendChild(el('i')); dots.appendChild(el('i'));
