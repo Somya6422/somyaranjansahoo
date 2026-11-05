@@ -112,6 +112,14 @@
   for (var y = y0; y <= y1; y++) yr.push({ k: String(y), v: byYear[y] || 0 });
   if ($('chartYears')) columns($('chartYears'), yr, 'certificates');
   if ($('chartAreas')) bars($('chartAreas'), Object.keys(byArea).map(function (k) { return { k: k, v: byArea[k] }; }).sort(function (a, b) { return b.v - a.v; }), 'certificates');
+  // The headline is worked out from the same numbers, so it stays true as certificates are added.
+  var topArea = Object.keys(byArea).sort(function (a, b) { return byArea[b] - byArea[a]; })[0], finding = $('myFinding');
+  if (finding && topArea) {
+    var lead = document.createElement('strong'); lead.textContent = 'Main finding:';
+    finding.appendChild(lead);
+    finding.appendChild(document.createTextNode(' ' + byArea[topArea] + ' of my ' + creds.length + ' certificates are in ' + topArea + ', the area I have put the most study into so far.'));
+    finding.hidden = false;
+  }
   if ($('chartLangs') && window.__ghRepos) window.__ghRepos().then(function (list) {
     if (!list) { $('chartLangs').textContent = 'GitHub is taking a break. See my repositories on GitHub directly.'; return; }
     var by = {};
