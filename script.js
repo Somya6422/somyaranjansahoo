@@ -46,10 +46,8 @@
   }
 
 
-  // ---- Device-aware experience: phone / tablet / desktop (the view switcher forces one with ?device=) ----
-  var forcedDevice = (new URLSearchParams(location.search).get('device') || '').toLowerCase();
+  // ---- Device-aware experience: a narrow desktop window gets the compact interface ----
   function detectDevice() {
-    if (/^(phone|tablet|desktop)$/.test(forcedDevice)) return forcedDevice;
     var w = window.innerWidth;
     if (w <= 760) return 'phone';
     if (w <= 1100) return 'tablet';
@@ -58,8 +56,7 @@
   function applyDevice() {
     var d = detectDevice();
     root.setAttribute('data-device', d);
-    var touch = forcedDevice ? d !== 'desktop' : window.matchMedia('(hover: none)').matches;
-    root.setAttribute('data-touch', touch ? '1' : '0');
+    root.setAttribute('data-touch', window.matchMedia('(hover: none)').matches ? '1' : '0');
   }
   applyDevice();
   var deviceTimer;
@@ -1472,9 +1469,6 @@
     act('Download placement resume (PDF)', 'Campus format', function () { CMDS.resume('placement'); }, 'cv college tpo campus');
     act('Open the terminal', 'Type commands', function () { openTerminal(); }, 'shell console cli');
     act('Switch light / dark theme', 'Theme', function () { $('themeToggle').click(); }, 'mode color');
-    ['phone', 'tablet', 'desktop'].forEach(function (m) {
-      act('Preview on ' + m, 'Device view', function () { try { localStorage.setItem('viewMode', m); } catch (e) {} var v = $('viewToggle'); if (v) v.click(); }, 'device mobile responsive');
-    });
     act('Replay the intro', 'Reload the page', function () { location.reload(); }, 'animation hands');
     [['work', 'Work'], ['data', 'Data lab'], ['about', 'About'], ['experience', 'Experience'], ['credentials', 'Credentials'], ['resume', 'Resume'], ['contact', 'Contact']].forEach(function (s) {
       it.push({ g: 'Sections', label: s[1], hint: 'Section', run: function () { var el = $(s[0]); if (el) landOn(el); } });
@@ -1555,67 +1549,7 @@
   }
 
 
-  // ---- Screen-size viewer: shows this page in a phone, tablet or desktop frame ----
-  var embedded = false;
-  try { embedded = window.self !== window.top; } catch (e) { embedded = true; }
-  if (embedded) root.classList.add('is-embed');
-  var viewBtn = $('viewToggle');
-  var viewer = $('viewer');
-  if (!embedded && viewBtn && viewer && typeof viewer.showModal === 'function') {
-    viewBtn.hidden = false;
-    var vFrame = $('viewerFrame'), vFit = $('viewerFit'), vDevice = $('viewerDevice'), vStage = $('viewerStage'), vSize = $('viewerSize');
-    var modes = viewer.querySelectorAll('.viewer__mode');
-    var current = null;
-    function fitDevice() {
-      if (!current) return;
-      var w = +current.getAttribute('data-w'), h = +current.getAttribute('data-h');
-      var cs = getComputedStyle(vStage);
-      var aw = vStage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-      var ah = vStage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-      if (aw <= 0 || ah <= 0) return; // not laid out yet
-      var bw = current.getAttribute('data-mode') === 'desktop' ? 16 : 20; // frame border, both sides
-      var s = Math.min(1, aw / (w + bw), ah / (h + bw));
-      vDevice.style.width = (w + bw) + 'px';
-      vDevice.style.height = (h + bw) + 'px';
-      vDevice.style.transform = 'scale(' + s + ')';
-      vFit.style.width = Math.floor((w + bw) * s) + 'px';
-      vFit.style.height = Math.floor((h + bw) * s) + 'px';
-      vSize.textContent = w + ' × ' + h + (s < 1 ? ' · shown at ' + Math.round(s * 100) + '%' : '');
-    }
-    function setMode(btn) {
-      current = btn;
-      modes.forEach(function (m) { m.setAttribute('aria-pressed', String(m === btn)); });
-      vDevice.setAttribute('data-mode', btn.getAttribute('data-mode'));
-      // Load the page with that device's own interface, not just a narrower window.
-      var q = new URLSearchParams(location.search); q.set('device', btn.getAttribute('data-mode'));
-      var want = location.pathname + '?' + q.toString() + (location.hash || '');
-      if (vFrame.getAttribute('src') !== want) vFrame.src = want;
-      try { localStorage.setItem('viewMode', btn.getAttribute('data-mode')); } catch (e) {}
-      fitDevice();
-    }
-    modes.forEach(function (m) { m.addEventListener('click', function () { setMode(m); }); });
-    viewBtn.addEventListener('click', function () {
-      var saved = null;
-      try { saved = localStorage.getItem('viewMode'); } catch (e) {}
-      // Default to a size unlike the one being used right now.
-      var pick = saved || (window.innerWidth < 700 ? 'desktop' : 'phone');
-      var btn = viewer.querySelector('.viewer__mode[data-mode="' + pick + '"]') || modes[0];
-      viewer.showModal();
-      document.body.style.overflow = 'hidden';
-      setMode(btn);
-      btn.focus();
-    });
-    $('viewerClose').addEventListener('click', function () { viewer.close(); });
-    viewer.addEventListener('close', function () {
-      document.body.style.overflow = '';
-      vFrame.removeAttribute('src');
-      viewBtn.focus();
-    });
-    if ('ResizeObserver' in window) new ResizeObserver(function () { if (viewer.open) fitDevice(); }).observe(vStage);
-    else window.addEventListener('resize', function () { if (viewer.open) fitDevice(); });
-  }
-
-  // Keep the theme in step between this page and the preview frame.
+  // Keep the theme in step across open tabs.
   window.addEventListener('storage', function (e) {
     if (e.key !== 'theme') return;
     if (e.newValue) root.setAttribute('data-theme', e.newValue); else root.removeAttribute('data-theme');
