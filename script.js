@@ -1199,7 +1199,7 @@
       opener = a; group = [a]; gi = 0;
       stopVideo();
       boxVid = document.createElement('video');
-      boxVid.controls = true; boxVid.playsInline = true; boxVid.preload = 'metadata'; boxVid.autoplay = !reduceMotion;
+      boxVid.controls = true; boxVid.playsInline = true; boxVid.muted = true; boxVid.preload = 'metadata';
       boxVid.src = a.getAttribute('href');
       boxImg.hidden = true;
       boxImg.parentNode.insertBefore(boxVid, boxImg);
@@ -1208,6 +1208,7 @@
       prevB.hidden = nextB.hidden = true;
       if (!box.open) box.showModal();
       $('lightboxClose').focus();
+      if (!reduceMotion) boxVid.play().catch(function () {}); // started inside the tap, as iPhones require
     }
     function show(i) {
       gi = (i + group.length) % group.length;
