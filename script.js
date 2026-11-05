@@ -57,6 +57,7 @@
     var d = detectDevice();
     root.setAttribute('data-device', d);
     root.setAttribute('data-touch', window.matchMedia('(hover: none)').matches ? '1' : '0');
+    root.classList.toggle('is-phone', window.matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) <= 600);
   }
   applyDevice();
   var deviceTimer;
