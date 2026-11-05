@@ -415,6 +415,8 @@
     }
     skipBtn.addEventListener('click', userSkip);
     ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, userSkip, true); });
+    // Someone following a link to a section or project wants that, not the intro.
+    if (startHash.length > 1 && (/^#project\//.test(startHash) || document.getElementById(hashId(startHash)))) finish();
 
     // One hand works through its own list; both run at the same time.
     async function work(h, list, startX) {
