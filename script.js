@@ -1935,7 +1935,7 @@
   // ---- Particle code background in the hero (pauses when off-screen or hidden) ----
   (function () {
     var stageEl = document.querySelector('.stage');
-    if (!stageEl || reduceMotion || !window.HTMLCanvasElement) return;
+    if (!stageEl || reduceMotion || !window.HTMLCanvasElement || root.classList.contains('intro-lite')) return; // phones skip it to stay smooth
     var cv = document.createElement('canvas'); cv.className = 'particles'; cv.setAttribute('aria-hidden', 'true');
     stageEl.insertBefore(cv, stageEl.firstChild);
     var ctx = cv.getContext('2d'), W = 0, H = 0, dpr = 1, parts = [], mouse = { x: -9999, y: -9999 }, running = false, raf = 0;
