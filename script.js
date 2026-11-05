@@ -401,6 +401,7 @@
       buildDone = true;
       document.dispatchEvent(new Event('build:done'));
       if (startHash && startHash.length > 1) {
+        if (window.__showCred) window.__showCred(hashId(startHash));
         var target = document.getElementById(hashId(startHash));
         // a deep link lands instantly (no smooth scroll through every section); sections settle their heights as they render, so re-aim twice
         if (target) [60, 260, 600].forEach(function (ms, i) { setTimeout(function () { var t = target.getBoundingClientRect().top; if (!i || t < 0 || t > 160) target.scrollIntoView({ behavior: 'instant' }); }, ms); });
@@ -966,6 +967,29 @@
         if (next) { var f = next.querySelector('a, button'); if (f) f.focus({ preventScroll: true }); }
       });
       collapse(true);
+    }
+    // A link to one certificate has to work even when that certificate is folded away or filtered out.
+    var showCred = function (id) {
+      var c = document.getElementById(id);
+      if (!c || !c.classList.contains('cred')) return;
+      if (c.classList.contains('is-hidden')) { var all = document.querySelector('#credFilters [data-filter="all"]'); if (all) all.click(); }
+      if (c.classList.contains('is-collapsed') && moreBtn) moreBtn.click();
+    };
+    window.__showCred = showCred;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#cert-"]');
+      if (a) showCred(a.getAttribute('href').slice(1));
+    }, true);
+    window.addEventListener('hashchange', function () {
+      var id = hashId(location.hash), c = document.getElementById(id);
+      if (!c || !c.classList.contains('cred')) return;
+      showCred(id);
+      c.scrollIntoView({ behavior: 'instant' });
+    });
+    if (!building && /^#cert-/.test(location.hash)) {
+      showCred(hashId(location.hash));
+      var linked = document.getElementById(hashId(location.hash));
+      if (linked) setTimeout(function () { linked.scrollIntoView({ behavior: 'instant' }); }, 120);
     }
   }
 
