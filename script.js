@@ -1180,7 +1180,7 @@
   // ---- Gallery viewer: arrows, keyboard, swipe and a counter across a section's images ----
   var box = $('lightbox');
   if (box && typeof box.showModal === 'function') {
-    var boxImg = $('lightboxImg'), boxCap = $('lightboxCap'), opener = null, group = [], gi = 0, swiped = false;
+    var boxImg = $('lightboxImg'), boxCap = $('lightboxCap'), opener = null, group = [], gi = 0, swiped = false, baseScale = 1;
     var chev = function (d) { return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + (d < 0 ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7') + '"/></svg>'; };
     var prevB = document.createElement('button'), nextB = document.createElement('button'), count = document.createElement('p');
     prevB.type = nextB.type = 'button';
@@ -1224,6 +1224,7 @@
       group = Array.prototype.slice.call(scope.querySelectorAll('a.zoom')).filter(function (z) { return !z.closest('.is-hidden'); });
       if (group.indexOf(a) < 0) group = [a];
       opener = a;
+      baseScale = window.visualViewport ? visualViewport.scale : 1;
       show(group.indexOf(a));
       if (!box.open) box.showModal();
       $('lightboxClose').focus();
@@ -1242,7 +1243,9 @@
       else if (e.key === 'ArrowRight') { e.preventDefault(); show(gi + 1); }
     });
     var sx = null;
-    box.addEventListener('pointerdown', function (e) { sx = e.clientX; });
+    function zoomed() { return window.visualViewport && visualViewport.scale > baseScale * 1.1; } // a pinched photo pans, it doesn't swipe
+    box.addEventListener('pointerdown', function (e) { sx = zoomed() ? null : e.clientX; });
+    box.addEventListener('pointercancel', function () { sx = null; });
     box.addEventListener('pointerup', function (e) {
       if (sx === null) return;
       var dx = e.clientX - sx; sx = null;

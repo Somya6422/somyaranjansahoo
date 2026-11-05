@@ -1652,7 +1652,8 @@ main .section :is(.section__head > *, .group-title, .filters, .viewtoggle, .case
 .lightbox__nav[hidden] { display: none; }
 .lightbox__count { position: fixed; left: 50%; top: 18px; transform: translateX(-50%); margin: 0; padding: 6px 12px; border-radius: 999px; background: rgba(15, 17, 22, .6); color: #fff; font-size: .8rem; }
 .lightbox__count:empty { display: none; }
-.lightbox img { touch-action: pan-y; user-select: none; -webkit-user-drag: none; }
+.lightbox, .lightbox::backdrop, .lightbox img { touch-action: pan-y pinch-zoom; }
+.lightbox img { user-select: none; -webkit-user-drag: none; }
 @media (max-width: 760px) { .lightbox__nav { top: auto; bottom: 18px; margin-top: 0; } .lightbox__nav--prev { left: 18px; } .lightbox__nav--next { right: 18px; } }
 
 /* Live GitHub line on project cards */
