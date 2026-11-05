@@ -75,3 +75,7 @@ All site images are WebP files in `assets/img/` with several widths each, genera
 ## Security note
 
 The toll project's local git remote (`✅TOLL_PLAZA-SYSTEM/.git/config`) contains a GitHub personal access token in plain text. Revoke it in GitHub → Settings → Developer settings → Personal access tokens, and use a credential manager instead.
+
+## License
+
+The MIT license in this repository covers the code only. Photos, certificates, resume files and other personal content belong to Somya Ranjan Sahoo and the people shown, and may not be reused without permission.
