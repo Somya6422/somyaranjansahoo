@@ -1665,7 +1665,7 @@ main .section :is(.section__head > *, .group-title, .filters, .viewtoggle, .case
 .is-phone .term__close { width: 110px; height: 110px; }
 .is-phone .term__close svg { width: 52px; height: 52px; }
 .is-phone .to-top { transform: scale(2.2); transform-origin: bottom right; }
-:root[data-touch="1"] .cmdk-btn__k { display: none; }
+:root[data-touch="1"] .cmdk-btn__k, .is-phone .cmdk-btn__k { display: none !important; }
 .lightbox, .lightbox::backdrop, .lightbox img { touch-action: pan-y pinch-zoom; }
 .lightbox img { user-select: none; -webkit-user-drag: none; }
 @media (max-width: 760px) { .lightbox__nav { top: auto; bottom: 18px; margin-top: 0; } .lightbox__nav--prev { left: 18px; } .lightbox__nav--next { right: 18px; } }
