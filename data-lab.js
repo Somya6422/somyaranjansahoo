@@ -130,55 +130,69 @@
   // ---- SQL playground ----
   var box = $('sqlBox');
   if (!box) return;
-  var input = $('sqlIn'), out = $('sqlOut'), run = $('sqlRun'), db = null, loading = null;
+  var input = $('sqlIn'), out = $('sqlOut'), run = $('sqlRun'), worker = null, loading = null;
   var MON = { Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06', Jul: '07', Aug: '08', Sep: '09', Oct: '10', Nov: '11', Dec: '12' };
+  var TIME_LIMIT = 5000;
   function say(text, cls) { out.textContent = ''; out.appendChild(el('p', 'sql__msg' + (cls ? ' ' + cls : ''), text)); }
+  function stop() { if (worker) worker.terminate(); worker = null; loading = null; }
   function start() {
     if (loading) return loading;
     say('Starting a real SQL database in your browser…');
-    loading = new Promise(function (res, rej) {
-      var sc = document.createElement('script');
-      sc.src = 'assets/js/sql-wasm.js'; sc.onload = res; sc.onerror = rej;
-      document.head.appendChild(sc);
-    }).then(function () {
-      return Promise.all([window.initSqlJs({ locateFile: function (f) { return 'assets/js/' + f; } }), fetch('assets/data/toll-plazas.json').then(function (r) { return r.json(); })]);
-    }).then(function (r) {
-      var SQL = r[0], plazas = r[1];
-      db = new SQL.Database();
-      db.run('CREATE TABLE certificates (title TEXT, issuer TEXT, area TEXT, year INT, month TEXT); CREATE TABLE projects (name TEXT, tech TEXT); CREATE TABLE toll_plazas (code TEXT, name TEXT, funding TEXT, road_class TEXT, state TEXT, city TEXT, lat REAL, lon REAL, geo_ok INT, nearest_km REAL);');
-      db.run('BEGIN');
-      var c = db.prepare('INSERT INTO certificates VALUES (?,?,?,?,?)');
-      creds.forEach(function (x) { c.run([x.title, x.issuer, x.area, x.year, x.year && x.mon ? x.year + '-' + MON[x.mon] : null]); }); c.free();
-      var p = db.prepare('INSERT INTO projects VALUES (?,?)');
-      Array.prototype.forEach.call(document.querySelectorAll('.case, .cards > .card'), function (n) {
-        var h = n.querySelector('h3'); if (!h) return;
-        p.run([h.textContent.trim(), Array.prototype.map.call(n.querySelectorAll('.chips li'), function (l) { return l.textContent; }).join(', ')]);
-      }); p.free();
-      var t = db.prepare('INSERT INTO toll_plazas VALUES (?,?,?,?,?,?,?,?,?,?)');
-      plazas.forEach(function (row) { t.run(row); }); t.free();
-      db.run('COMMIT');
+    loading = fetch('assets/data/toll-plazas.json').then(function (r) { return r.json(); }).then(function (plazas) {
+      return new Promise(function (res, rej) {
+        worker = new Worker('assets/js/sql-worker.js');
+        worker.onerror = rej;
+        worker.onmessage = function (e) { if (e.data.type === 'ready') res(); else rej(); };
+        worker.postMessage({
+          type: 'load', plazas: plazas,
+          certificates: creds.map(function (x) { return [x.title, x.issuer, x.area, x.year, x.year && x.mon ? x.year + '-' + MON[x.mon] : null]; }),
+          projects: Array.prototype.filter.call(document.querySelectorAll('.case, .cards > .card'), function (n) { return n.querySelector('h3'); }).map(function (n) {
+            return [n.querySelector('h3').textContent.trim(), Array.prototype.map.call(n.querySelectorAll('.chips li'), function (l) { return l.textContent; }).join(', ')];
+          })
+        });
+      });
     });
     return loading;
   }
-  function show(res) {
+  function show(r) {
     out.textContent = '';
-    if (!res.length) return say('The query ran and returned no rows.');
-    var r = res[res.length - 1], wrap = el('div', 'sql__scroll'), t = el('table'), head = el('tr');
+    if (!r.total) return say('The query ran and returned no rows.');
+    var wrap = el('div', 'sql__scroll'), t = el('table'), head = el('tr');
     r.columns.forEach(function (c) { var th = el('th', null, c); th.scope = 'col'; head.appendChild(th); });
     var thead = el('thead'); thead.appendChild(head); t.appendChild(thead);
     var tb = el('tbody');
-    r.values.slice(0, 100).forEach(function (row) { var tr = el('tr'); row.forEach(function (v) { tr.appendChild(el('td', null, v == null ? 'NULL' : String(v))); }); tb.appendChild(tr); });
+    r.rows.forEach(function (row) { var tr = el('tr'); row.forEach(function (v) { tr.appendChild(el('td', null, v == null ? 'NULL' : String(v))); }); tb.appendChild(tr); });
     t.appendChild(tb); wrap.appendChild(t); out.appendChild(wrap);
-    out.appendChild(el('p', 'sql__count', r.values.length + (r.values.length === 1 ? ' row' : ' rows') + (r.values.length > 100 ? ', showing the first 100' : '')));
+    out.appendChild(el('p', 'sql__count', r.total + (r.total === 1 ? ' row' : ' rows') + (r.total > 100 ? ', showing the first 100' : '')));
+  }
+  function ask(q) {
+    return new Promise(function (done) {
+      var timer = setTimeout(function () {
+        stop();
+        say('That query ran too long, so I stopped it. Add a LIMIT or try an example.', 'is-hint');
+        done();
+      }, TIME_LIMIT);
+      worker.onerror = function () {
+        clearTimeout(timer); stop();
+        say('That query was too heavy to finish. Add a LIMIT or try an example.', 'is-hint');
+        done();
+      };
+      worker.onmessage = function (e) {
+        clearTimeout(timer);
+        if (e.data.type === 'result') show(e.data.result);
+        else say('That query didn’t run: ' + e.data.message + '. Check the table and column names listed below, or try an example.', 'is-hint');
+        done();
+      };
+      worker.postMessage({ type: 'run', sql: q });
+    });
   }
   function exec() {
     var q = input.value.trim();
     if (!q) return say('Type a query first, or pick an example above.');
+    if (run.disabled) return;
     run.disabled = true;
-    start().then(function () {
-      try { show(db.exec(q)); }
-      catch (e) { say('That query didn’t run: ' + e.message + '. Check the table and column names listed below, or try an example.', 'is-hint'); }
-    }).catch(function () { loading = null; say('The database couldn’t start just now. Reload the page and try again.', 'is-hint'); })
+    start().then(function () { return ask(q); })
+      .catch(function () { stop(); say('The database couldn’t start just now. Reload the page and try again.', 'is-hint'); })
       .then(function () { run.disabled = false; });
   }
   run.addEventListener('click', exec);
