@@ -53,7 +53,6 @@
     var w = window.innerWidth;
     if (w <= 760) return 'phone';
     if (w <= 1100) return 'tablet';
-    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches && w <= 1366) return 'tablet';
     return 'desktop';
   }
   function applyDevice() {
