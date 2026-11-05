@@ -613,6 +613,8 @@ a.thumb, a.card__img, a.case__media, .study__gallery a { cursor: zoom-in; }
 .lightbox::backdrop { background: rgba(8, 8, 12, .85); backdrop-filter: blur(6px); }
 .lightbox[open] { animation: pop .3s var(--ease); }
 .lightbox img { max-width: min(92vw, 1200px); max-height: 82vh; width: auto; height: auto; border-radius: 14px; box-shadow: 0 30px 80px rgba(0,0,0,.6); margin: 0 auto; background: #111; }
+.lightbox img[hidden] { display: none; }
+.lightbox video { display: block; width: min(92vw, 1200px); max-height: 82vh; border-radius: 14px; box-shadow: 0 30px 80px rgba(0,0,0,.6); margin: 0 auto; background: #000; }
 .lightbox p { color: #eee; text-align: center; margin: 14px 0 0; font-size: .92rem; }
 .lightbox__close {
   position: absolute; top: -18px; right: -18px; width: 42px; height: 42px; border-radius: 50%; border: 0; cursor: pointer;

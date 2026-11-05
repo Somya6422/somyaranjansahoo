@@ -1192,6 +1192,27 @@
     nextB.className = 'lightbox__nav lightbox__nav--next'; nextB.setAttribute('aria-label', 'Next image'); nextB.innerHTML = chev(1);
     count.className = 'lightbox__count mono'; count.setAttribute('aria-live', 'polite');
     box.appendChild(prevB); box.appendChild(nextB); box.appendChild(count);
+    // Full demos open here with player controls; a[data-play] falls back to the plain file without JS.
+    var boxVid = null;
+    function stopVideo() {
+      if (!boxVid) return;
+      boxVid.pause(); boxVid.removeAttribute('src'); boxVid.load(); boxVid.remove(); boxVid = null;
+      boxImg.hidden = false;
+    }
+    function playVideo(a) {
+      opener = a; group = [a]; gi = 0;
+      stopVideo();
+      boxVid = document.createElement('video');
+      boxVid.controls = true; boxVid.playsInline = true; boxVid.preload = 'metadata'; boxVid.autoplay = !reduceMotion;
+      boxVid.src = a.getAttribute('href');
+      boxImg.hidden = true;
+      boxImg.parentNode.insertBefore(boxVid, boxImg);
+      boxCap.textContent = a.getAttribute('data-caption') || a.textContent;
+      count.textContent = '';
+      prevB.hidden = nextB.hidden = true;
+      if (!box.open) box.showModal();
+      $('lightboxClose').focus();
+    }
     function show(i) {
       gi = (i + group.length) % group.length;
       var a = group[gi], img = a.querySelector('img');
@@ -1212,14 +1233,15 @@
       $('lightboxClose').focus();
     }
     document.addEventListener('click', function (e) {
-      var a = e.target.closest('a.zoom');
+      var a = e.target.closest('a.zoom, a[data-play]');
       if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
       e.preventDefault();
-      openFrom(a);
+      if (a.hasAttribute('data-play')) playVideo(a); else openFrom(a);
     });
     prevB.addEventListener('click', function () { show(gi - 1); });
     nextB.addEventListener('click', function () { show(gi + 1); });
     box.addEventListener('keydown', function (e) {
+      if (boxVid) return; // arrow keys belong to the video player
       if (e.key === 'ArrowLeft') { e.preventDefault(); show(gi - 1); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); show(gi + 1); }
     });
@@ -1232,7 +1254,7 @@
     });
     $('lightboxClose').addEventListener('click', function () { box.close(); });
     box.addEventListener('click', function (e) { if (e.target === box && !swiped) box.close(); });
-    box.addEventListener('close', function () { boxImg.removeAttribute('src'); if (opener) opener.focus(); });
+    box.addEventListener('close', function () { stopVideo(); boxImg.removeAttribute('src'); if (opener) opener.focus(); });
   }
 
   // ---- Live GitHub data on project cards (public API, cached for an hour) ----
