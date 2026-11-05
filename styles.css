@@ -2365,7 +2365,7 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
 .moments__item--big { grid-column: span 2; grid-row: span 2; }
 .moments__item--wide, .moments__grid[data-set] [data-fw] { grid-column: span 2; }
 .moments__item--tall { grid-row: span 2; }
-.moments__item--low img { object-position: 50% 85%; }
+.moments__grid[data-set] [data-fb] { grid-column: span 2; grid-row: span 2; }
 .moments__foot { margin: 14px 0 0; text-align: center; }
 .moments__foot:has(> [hidden]) { display: none; }
 @media (max-width: 760px) {

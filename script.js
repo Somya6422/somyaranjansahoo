@@ -2220,11 +2220,11 @@
     landOn(el);
   });
 
-  // Gallery: a short curated mosaic first, event filters and "show all" for the rest.
+  // Gallery: tiles run oldest to newest; a short mosaic first, event filters and "show all" for the rest.
   (function moments() {
     var grid = $('momentGrid'), bar = $('momentFilters'), more = $('momentMore');
     if (!grid || !bar || !more) return;
-    var FIRST = 7; // fills three full rows of the mosaic
+    var FIRST = 12; // fills five full rows of the mosaic
     var items = Array.prototype.slice.call(grid.querySelectorAll('.moments__item'));
     var buttons = Array.prototype.slice.call(bar.querySelectorAll('.filter'));
     var expanded = false;
