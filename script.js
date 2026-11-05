@@ -1265,12 +1265,18 @@
     // Each card gets its GitHub line right away (repo name), so nothing below ever shifts when live data arrives.
     // All of Somya's public repos in a single request, cached for an hour (GitHub allows 60 requests/hour per visitor).
     var ghAll = null;
+    // GitHub gets eight seconds to answer, so "Checking GitHub…" can never stay on screen.
+    function ghGet(url) {
+      var ctl = window.AbortController ? new AbortController() : null;
+      if (ctl) setTimeout(function () { ctl.abort(); }, 8000);
+      return fetch(url, { headers: { Accept: 'application/vnd.github+json' }, signal: ctl ? ctl.signal : undefined });
+    }
     function ghRepos() {
       if (ghAll) return ghAll;
       var c = null;
       try { c = JSON.parse(localStorage.getItem('gh:all') || 'null'); } catch (e) {}
       if (c && Date.now() - c.t < 3600000) return (ghAll = Promise.resolve(c.d));
-      ghAll = fetch('https://api.github.com/users/Somya6422/repos?per_page=100&sort=pushed', { headers: { Accept: 'application/vnd.github+json' } })
+      ghAll = ghGet('https://api.github.com/users/Somya6422/repos?per_page=100&sort=pushed')
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (list) {
           if (!list) return null;
@@ -1306,7 +1312,7 @@
         var mine = /^somya6422\//i.test(repo);
         var got = mine ? ghRepos().then(function (list) { var r = (list || []).filter(function (x) { return x.full === repo.toLowerCase(); })[0]; return r ? { lang: r.lang, stars: r.stars, pushed: r.pushed, url: r.url } : null; })
           : cached && Date.now() - cached.t < 3600000 ? Promise.resolve(cached.d)
-          : fetch('https://api.github.com/repos/' + repo, { headers: { Accept: 'application/vnd.github+json' } })
+          : ghGet('https://api.github.com/repos/' + repo)
               .then(function (r) { return r.ok ? r.json() : null; })
               .then(function (d) {
                 if (!d) return null;
