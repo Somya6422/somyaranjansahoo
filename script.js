@@ -306,6 +306,8 @@
   // Every load starts fresh from the top (the intro plays each time), so don't restore the old scroll position.
   if (building && 'scrollRestoration' in history) history.scrollRestoration = 'manual';
   var startHash = location.hash;
+  // A malformed link (#%E0%A4) must not throw, so decode it safely.
+  function hashId(h) { try { return decodeURIComponent(h.slice(1)); } catch (e) { return h.slice(1); } }
   var pace = 1;
   if (building) { try { if (sessionStorage.getItem('intro:seen') === '1') pace = 0.32; sessionStorage.setItem('intro:seen', '1'); } catch (e) {} }
   if (building) whenVisible(function () { whenReady(function () {
@@ -399,7 +401,7 @@
       buildDone = true;
       document.dispatchEvent(new Event('build:done'));
       if (startHash && startHash.length > 1) {
-        var target = document.getElementById(decodeURIComponent(startHash.slice(1)));
+        var target = document.getElementById(hashId(startHash));
         // a deep link lands instantly (no smooth scroll through every section); sections settle their heights as they render, so re-aim twice
         if (target) [60, 260, 600].forEach(function (ms, i) { setTimeout(function () { var t = target.getBoundingClientRect().top; if (!i || t < 0 || t > 160) target.scrollIntoView({ behavior: 'instant' }); }, ms); });
       }
