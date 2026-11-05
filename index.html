@@ -64,8 +64,8 @@
         <span class="brand__name">Somya Ranjan Sahoo</span><span class="sr-only"> — back to top</span>
       </a>
       <nav class="nav__links" id="navLinks" aria-label="Primary">
-        <a href="#work">Work</a>
         <a href="#data">Data</a>
+        <a href="#work">Work</a>
         <a href="#about">About</a>
         <a href="#experience">Experience</a>
         <a href="#credentials">Credentials</a>
@@ -143,7 +143,7 @@
           <div class="enter d8"><dt>Internships</dt><dd><span class="count" data-to="2">02</span></dd><dd class="stage__sub">+ letter of recommendation</dd></div>
         </dl>
       </div>
-      <a class="stage__scroll" href="#work"><span>Scroll</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+      <a class="stage__scroll" href="#data"><span>Scroll</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
     </section>
 
     <div class="nowbar" id="nowbar">
@@ -158,12 +158,110 @@
 
     <div class="ticker" aria-hidden="true"><div class="ticker__track"><div class="ticker__row"><span>Python</span><i>✦</i><span class="o">Node.js</span><i>✦</i><span>SQL</span><i>✦</i><span class="o">Excel</span><i>✦</i><span>FastAPI</span><i>✦</i><span class="o">Streamlit</span><i>✦</i><span>OpenCV</span><i>✦</i><span class="o">pandas</span><i>✦</i><span>Three.js</span><i>✦</i><span class="o">Next.js</span><i>✦</i><span>GIS</span><i>✦</i><span class="o">Neo4j</span><i>✦</i><span>Raspberry Pi</span><i>✦</i><span class="o">Git &amp; GitHub</span><i>✦</i></div><div class="ticker__row"><span>Python</span><i>✦</i><span class="o">Node.js</span><i>✦</i><span>SQL</span><i>✦</i><span class="o">Excel</span><i>✦</i><span>FastAPI</span><i>✦</i><span class="o">Streamlit</span><i>✦</i><span>OpenCV</span><i>✦</i><span class="o">pandas</span><i>✦</i><span>Three.js</span><i>✦</i><span class="o">Next.js</span><i>✦</i><span>GIS</span><i>✦</i><span class="o">Neo4j</span><i>✦</i><span>Raspberry Pi</span><i>✦</i><span class="o">Git &amp; GitHub</span><i>✦</i></div></div></div>
 
+    <!-- DATA -->
+    <section class="section section--alt" id="data" aria-labelledby="data-title">
+      <div class="wrap">
+        <header class="section__head">
+          <p class="eyebrow">01 · Data lab</p>
+          <h2 id="data-title">Data, <span class="hl">not just code.</span></h2>
+          <p class="section__intro">Becoming a data analyst is my main goal, so this is where I practise it in the open: a real analysis, my own numbers, and a live database you can query.</p>
+        </header>
+
+        <article class="study-data" id="toll-analysis">
+          <h3 class="dl-h">India's toll network, in data</h3>
+          <p class="dl-lede">My toll project came with a registry of 2,003 plazas. I treated it as a dataset and asked: where are India's tolls, who runs them, and can the data be trusted?</p>
+          <dl class="dl-stats">
+            <div><dt>Plazas after cleaning</dt><dd>1,997</dd></div>
+            <div><dt>States and UTs</dt><dd>26</dd></div>
+            <div><dt>In just 4 states</dt><dd>53.6%</dd></div>
+            <div><dt>Records fixed or flagged</dt><dd>159</dd></div>
+          </dl>
+          <div class="dl-grid">
+            <figure class="dl-fig"><figcaption><strong>Four states hold more than half of all plazas</strong><span>Toll plazas by state. Rajasthan alone has 1 in 5.</span></figcaption><div id="chartStates" class="dl-chart"></div></figure>
+            <figure class="dl-fig"><figcaption><strong>National roads are publicly funded; state roads are mostly private</strong><span>Share of plazas by funding model. State roads: 65% private across all models.</span></figcaption><div id="chartFunding" class="dl-chart"></div></figure>
+            <figure class="dl-fig"><figcaption><strong>Karnataka leans most on private operators</strong><span>Private share in states with 50 or more plazas.</span></figcaption><div id="chartPrivate" class="dl-chart"></div></figure>
+            <figure class="dl-fig"><figcaption><strong>3 in 10 plazas have another within 10 km</strong><span>Straight-line gap to the nearest plaza on any road, so this shows clusters, not rule breaches.</span></figcaption><div id="chartSpacing" class="dl-chart"></div></figure>
+          </div>
+          <div class="dl-notes">
+            <div>
+              <h4>What I had to clean</h4>
+              <ul>
+                <li><strong>16 spellings</strong> of 7 funding types (Conc, Conc., CONC, Concessio…)</li>
+                <li><strong>2 longitudes</strong> that lost their decimal point (731669180 → 73.1669180)</li>
+                <li><strong>8 plazas</strong> placed 650–1,770 km outside their own state, such as Uttar Pradesh plazas with Chennai's coordinates</li>
+                <li><strong>25 plazas</strong> sharing an exact coordinate with a different plaza, a copy-paste sign</li>
+                <li><strong>6 duplicate records</strong> under different codes, and 1 cut-off state name</li>
+              </ul>
+            </div>
+            <div>
+              <h4>How I did it, and the limits</h4>
+              <ul>
+                <li>Profiled and cleaned with <strong>pandas</strong>, logging every change</li>
+                <li>Caught bad coordinates by distance from each state's median, with no map files needed</li>
+                <li>Answered the questions in <strong>SQL</strong> with CTEs and window functions, written for MySQL 8 and run on SQLite</li>
+                <li>Limits: a May 2026 snapshot with no traffic or revenue, so it shows where plazas are, not how busy they are</li>
+              </ul>
+              <p class="dl-links"><a class="link" href="https://github.com/Somya6422/india-toll-network-analysis" target="_blank" rel="noopener noreferrer">Code on GitHub ↗</a><a class="link" href="https://github.com/Somya6422/india-toll-network-analysis/blob/main/analysis.py" target="_blank" rel="noopener noreferrer">The Python ↗</a><a class="link" href="https://github.com/Somya6422/india-toll-network-analysis/blob/main/queries.sql" target="_blank" rel="noopener noreferrer">The SQL ↗</a><a class="link" href="https://github.com/Somya6422/india-toll-network-analysis/blob/main/cleaning_log.csv" target="_blank" rel="noopener noreferrer">Cleaning log ↗</a></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="study-data" id="my-numbers">
+          <h3 class="dl-h">My journey in data</h3>
+          <p class="dl-lede">The same habit applied to myself. These charts count the certificates on this page and my live GitHub repositories, so they update themselves.</p>
+          <div class="dl-grid dl-grid--3">
+            <figure class="dl-fig"><figcaption><strong>Certificates by year</strong><span>By year earned.</span></figcaption><div id="chartYears" class="dl-chart"></div></figure>
+            <figure class="dl-fig"><figcaption><strong>Certificates by area</strong><span>What I've spent the time on.</span></figcaption><div id="chartAreas" class="dl-chart"></div></figure>
+            <figure class="dl-fig"><figcaption><strong>GitHub repositories by language</strong><span>Live from GitHub.</span></figcaption><div id="chartLangs" class="dl-chart"><p class="dl-wait">Checking GitHub…</p></div></figure>
+          </div>
+        </article>
+
+        <article class="study-data sql" id="sqlBox">
+          <h3 class="dl-h">Try it yourself: a live SQL database</h3>
+          <p class="dl-lede">This is a real SQL database running in your browser, loaded with my certificates, my projects and the cleaned toll data. Pick an example or write your own query. Nothing you do here can break anything.</p>
+          <div class="sql__examples">
+            <button type="button" class="sql__ex" data-sql="SELECT state, COUNT(*) AS plazas
+FROM toll_plazas
+GROUP BY state
+ORDER BY plazas DESC
+LIMIT 10;">Top toll states</button>
+            <button type="button" class="sql__ex" data-sql="SELECT state, COUNT(*) AS plazas,
+  ROUND(100.0 * SUM(funding IN ('Concession','BOT','TOT','DBFOT')) / COUNT(*), 1) AS private_pct
+FROM toll_plazas
+GROUP BY state
+HAVING COUNT(*) >= 50
+ORDER BY private_pct DESC;">Private share by state</button>
+            <button type="button" class="sql__ex" data-sql="SELECT month, title
+FROM certificates
+WHERE area LIKE 'Hackathons%'
+ORDER BY month DESC;">My hackathon timeline</button>
+            <button type="button" class="sql__ex" data-sql="SELECT area, COUNT(*) AS certificates
+FROM certificates
+GROUP BY area
+ORDER BY certificates DESC;">Certificates by area</button>
+            <button type="button" class="sql__ex" data-sql="SELECT name, tech
+FROM projects
+WHERE tech LIKE '%Python%';">Projects using Python</button>
+          </div>
+          <label class="sr-only" for="sqlIn">SQL query</label>
+          <textarea id="sqlIn" class="sql__in" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off">SELECT state, COUNT(*) AS plazas
+FROM toll_plazas
+GROUP BY state
+ORDER BY plazas DESC
+LIMIT 10;</textarea>
+          <p class="sql__bar"><button type="button" class="btn btn--primary btn--sm" id="sqlRun">Run query</button><span class="sql__keys mono">Ctrl + Enter</span></p>
+          <div id="sqlOut" class="sql__out" role="status" aria-live="polite"></div>
+          <p class="sql__schema mono">certificates(title, issuer, area, year, month) · projects(name, tech) · toll_plazas(code, name, funding, road_class, state, city, lat, lon, geo_ok, nearest_km)</p>
+        </article>
+      </div>
+    </section>
+
     <!-- SELECTED WORK & RECOGNITION -->
     <section class="section section--alt" id="work" aria-labelledby="work-title">
       <div class="wrap">
         <header class="section__head section__head--row">
           <div>
-            <p class="eyebrow">01 · Selected work &amp; recognition</p>
+            <p class="eyebrow">02 · Selected work &amp; recognition</p>
             <h2 id="work-title">Things I've <span class="hl">built.</span></h2>
             <p class="section__intro">What each project does, who built it and where it got recognised. Open a case study
               to see how it works and which part was hardest to get right.</p>
@@ -434,109 +532,11 @@
       </div>
     </section>
 
-    <!-- DATA -->
-    <section class="section section--alt" id="data" aria-labelledby="data-title">
-      <div class="wrap">
-        <header class="section__head">
-          <p class="eyebrow">Data lab</p>
-          <h2 id="data-title">Data, <span class="hl">not just code.</span></h2>
-          <p class="section__intro">Becoming a data analyst is my main goal, so this is where I practise it in the open: a real analysis, my own numbers, and a live database you can query.</p>
-        </header>
-
-        <article class="study-data" id="toll-analysis">
-          <h3 class="dl-h">India's toll network, in data</h3>
-          <p class="dl-lede">My toll project came with a registry of 2,003 plazas. I treated it as a dataset and asked: where are India's tolls, who runs them, and can the data be trusted?</p>
-          <dl class="dl-stats">
-            <div><dt>Plazas after cleaning</dt><dd>1,997</dd></div>
-            <div><dt>States and UTs</dt><dd>26</dd></div>
-            <div><dt>In just 4 states</dt><dd>53.6%</dd></div>
-            <div><dt>Records fixed or flagged</dt><dd>159</dd></div>
-          </dl>
-          <div class="dl-grid">
-            <figure class="dl-fig"><figcaption><strong>Four states hold more than half of all plazas</strong><span>Toll plazas by state. Rajasthan alone has 1 in 5.</span></figcaption><div id="chartStates" class="dl-chart"></div></figure>
-            <figure class="dl-fig"><figcaption><strong>National roads are publicly funded; state roads are mostly private</strong><span>Share of plazas by funding model. State roads: 65% private across all models.</span></figcaption><div id="chartFunding" class="dl-chart"></div></figure>
-            <figure class="dl-fig"><figcaption><strong>Karnataka leans most on private operators</strong><span>Private share in states with 50 or more plazas.</span></figcaption><div id="chartPrivate" class="dl-chart"></div></figure>
-            <figure class="dl-fig"><figcaption><strong>3 in 10 plazas have another within 10 km</strong><span>Straight-line gap to the nearest plaza on any road, so this shows clusters, not rule breaches.</span></figcaption><div id="chartSpacing" class="dl-chart"></div></figure>
-          </div>
-          <div class="dl-notes">
-            <div>
-              <h4>What I had to clean</h4>
-              <ul>
-                <li><strong>16 spellings</strong> of 7 funding types (Conc, Conc., CONC, Concessio…)</li>
-                <li><strong>2 longitudes</strong> that lost their decimal point (731669180 → 73.1669180)</li>
-                <li><strong>8 plazas</strong> placed 650–1,770 km outside their own state, such as Uttar Pradesh plazas with Chennai's coordinates</li>
-                <li><strong>25 plazas</strong> sharing an exact coordinate with a different plaza, a copy-paste sign</li>
-                <li><strong>6 duplicate records</strong> under different codes, and 1 cut-off state name</li>
-              </ul>
-            </div>
-            <div>
-              <h4>How I did it, and the limits</h4>
-              <ul>
-                <li>Profiled and cleaned with <strong>pandas</strong>, logging every change</li>
-                <li>Caught bad coordinates by distance from each state's median, with no map files needed</li>
-                <li>Answered the questions in <strong>SQL</strong> with CTEs and window functions, written for MySQL 8 and run on SQLite</li>
-                <li>Limits: a May 2026 snapshot with no traffic or revenue, so it shows where plazas are, not how busy they are</li>
-              </ul>
-              <p class="dl-links"><a class="link" href="https://github.com/Somya6422/india-toll-network-analysis" target="_blank" rel="noopener noreferrer">Code on GitHub ↗</a><a class="link" href="https://github.com/Somya6422/india-toll-network-analysis/blob/main/analysis.py" target="_blank" rel="noopener noreferrer">The Python ↗</a><a class="link" href="https://github.com/Somya6422/india-toll-network-analysis/blob/main/queries.sql" target="_blank" rel="noopener noreferrer">The SQL ↗</a><a class="link" href="https://github.com/Somya6422/india-toll-network-analysis/blob/main/cleaning_log.csv" target="_blank" rel="noopener noreferrer">Cleaning log ↗</a></p>
-            </div>
-          </div>
-        </article>
-
-        <article class="study-data" id="my-numbers">
-          <h3 class="dl-h">My journey in data</h3>
-          <p class="dl-lede">The same habit applied to myself. These charts count the certificates on this page and my live GitHub repositories, so they update themselves.</p>
-          <div class="dl-grid dl-grid--3">
-            <figure class="dl-fig"><figcaption><strong>Certificates by year</strong><span>By year earned.</span></figcaption><div id="chartYears" class="dl-chart"></div></figure>
-            <figure class="dl-fig"><figcaption><strong>Certificates by area</strong><span>What I've spent the time on.</span></figcaption><div id="chartAreas" class="dl-chart"></div></figure>
-            <figure class="dl-fig"><figcaption><strong>GitHub repositories by language</strong><span>Live from GitHub.</span></figcaption><div id="chartLangs" class="dl-chart"><p class="dl-wait">Checking GitHub…</p></div></figure>
-          </div>
-        </article>
-
-        <article class="study-data sql" id="sqlBox">
-          <h3 class="dl-h">Try it yourself: a live SQL database</h3>
-          <p class="dl-lede">This is a real SQL database running in your browser, loaded with my certificates, my projects and the cleaned toll data. Pick an example or write your own query. Nothing you do here can break anything.</p>
-          <div class="sql__examples">
-            <button type="button" class="sql__ex" data-sql="SELECT state, COUNT(*) AS plazas
-FROM toll_plazas
-GROUP BY state
-ORDER BY plazas DESC
-LIMIT 10;">Top toll states</button>
-            <button type="button" class="sql__ex" data-sql="SELECT state, COUNT(*) AS plazas,
-  ROUND(100.0 * SUM(funding IN ('Concession','BOT','TOT','DBFOT')) / COUNT(*), 1) AS private_pct
-FROM toll_plazas
-GROUP BY state
-HAVING COUNT(*) >= 50
-ORDER BY private_pct DESC;">Private share by state</button>
-            <button type="button" class="sql__ex" data-sql="SELECT month, title
-FROM certificates
-WHERE area LIKE 'Hackathons%'
-ORDER BY month DESC;">My hackathon timeline</button>
-            <button type="button" class="sql__ex" data-sql="SELECT area, COUNT(*) AS certificates
-FROM certificates
-GROUP BY area
-ORDER BY certificates DESC;">Certificates by area</button>
-            <button type="button" class="sql__ex" data-sql="SELECT name, tech
-FROM projects
-WHERE tech LIKE '%Python%';">Projects using Python</button>
-          </div>
-          <label class="sr-only" for="sqlIn">SQL query</label>
-          <textarea id="sqlIn" class="sql__in" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off">SELECT state, COUNT(*) AS plazas
-FROM toll_plazas
-GROUP BY state
-ORDER BY plazas DESC
-LIMIT 10;</textarea>
-          <p class="sql__bar"><button type="button" class="btn btn--primary btn--sm" id="sqlRun">Run query</button><span class="sql__keys mono">Ctrl + Enter</span></p>
-          <div id="sqlOut" class="sql__out" role="status" aria-live="polite"></div>
-          <p class="sql__schema mono">certificates(title, issuer, area, year, month) · projects(name, tech) · toll_plazas(code, name, funding, road_class, state, city, lat, lon, geo_ok, nearest_km)</p>
-        </article>
-      </div>
-    </section>
-
     <!-- ABOUT -->
     <section class="section" id="about" aria-labelledby="about-title">
       <div class="wrap two-col">
         <header class="section__head">
-          <p class="eyebrow">02 · About</p>
+          <p class="eyebrow">03 · About</p>
           <h2 id="about-title">Discipline first, <span class="hl">then code.</span></h2>
           <figure class="codecard reveal" aria-label="Quick facts about me">
             <figcaption><span class="codecard__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="mono">about.json</span></figcaption>
@@ -630,7 +630,7 @@ LIMIT 10;</textarea>
     <section class="section section--alt" id="experience" aria-labelledby="exp-title">
       <div class="wrap two-col">
         <header class="section__head">
-          <p class="eyebrow">03 · Experience</p>
+          <p class="eyebrow">04 · Experience</p>
           <h2 id="exp-title">Where I've <span class="hl">worked.</span></h2>
         </header>
         <ol class="timeline reveal">
@@ -840,7 +840,7 @@ LIMIT 10;</textarea>
     <section class="section" id="credentials" aria-labelledby="cred-title">
       <div class="wrap">
         <header class="section__head">
-          <p class="eyebrow">04 · Credentials</p>
+          <p class="eyebrow">05 · Credentials</p>
           <h2 id="cred-title">Certificates &amp; <span class="hl">recognition.</span></h2>
           <p class="section__intro">Every certificate, award and letter in one place, including the ones shown with projects, experience and education above. Tap any certificate to see it full size.</p>
         </header>
@@ -1280,7 +1280,7 @@ LIMIT 10;</textarea>
     <section class="section" id="resume" aria-labelledby="resume-title">
       <div class="wrap">
         <header class="section__head">
-          <p class="eyebrow">05 · Resume</p>
+          <p class="eyebrow">06 · Resume</p>
           <h2 id="resume-title">One page. <span class="hl">No fluff.</span></h2>
           <p class="section__intro">Two versions of the same story: one tuned for company hiring and resume scanners, one in my college placement-cell format.</p>
         </header>
@@ -1378,7 +1378,7 @@ LIMIT 10;</textarea>
     <section class="section section--alt contact" id="contact" aria-labelledby="contact-title">
       <div class="wrap contact__grid">
         <div>
-          <p class="eyebrow">06 · Contact</p>
+          <p class="eyebrow">07 · Contact</p>
           <h2 id="contact-title">Let's build <span class="hl">something.</span></h2>
           <p class="lede">Hiring an intern, starting a project or looking for a hackathon teammate? Send me a message here, or just email me.</p>
 
