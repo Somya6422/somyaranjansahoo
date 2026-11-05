@@ -1,0 +1,14 @@
+# Local tooling
+.claude/
+.vercel/
+node_modules/
+.env*
+*.zip
+
+# Operating system files
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Resume sources hold a phone number in plain text; the site only needs the PDFs
+resume/
