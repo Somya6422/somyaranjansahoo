@@ -1,0 +1,7 @@
+# Not part of the published site
+.claude/
+resume/
+README.md
+dev-server.js
+*.zip
+run-local.bat
