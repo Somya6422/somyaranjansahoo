@@ -1803,7 +1803,9 @@
   (function () {
     var repoEl = $('nowRepo'), metaEl = $('nowMeta');
     if (!repoEl || !('fetch' in window)) return;
-    var got = (window.__ghRepos ? window.__ghRepos() : Promise.resolve(null)).then(function (list) {
+    // Waits for the page to finish loading, so this never competes with the first screen.
+    var pageLoaded = new Promise(function (done) { if (document.readyState === 'complete') done(); else window.addEventListener('load', done, { once: true }); });
+    var got = pageLoaded.then(function () { return window.__ghRepos ? window.__ghRepos() : null; }).then(function (list) {
       var r = (list || []).filter(function (x) { return !x.fork; })[0];
       return r ? { name: r.name, url: r.url, lang: r.lang, pushed: r.pushed } : null;
     });
@@ -1868,7 +1870,7 @@
   // ---- Recruiter quick view: the whole profile in 60 seconds ----
   var qv = document.createElement('dialog');
   qv.className = 'qv'; qv.id = 'qv'; qv.setAttribute('aria-labelledby', 'qvName');
-  qv.innerHTML = '<div class="qv__head"><img class="qv__avatar" src="assets/img/profile-240.webp" alt="Somya Ranjan Sahoo" width="64" height="64">' +
+  qv.innerHTML = '<div class="qv__head"><img class="qv__avatar" src="assets/img/profile-240.webp" loading="lazy" alt="Somya Ranjan Sahoo" width="64" height="64">' +
     '<div><h2 class="qv__name" id="qvName">Somya Ranjan Sahoo</h2><p class="qv__role">Aspiring data analyst · Software developer · Python · SQL · Excel</p></div>' +
     '<button type="button" class="qv__close" aria-label="Close summary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
     '<div class="qv__body">' +
