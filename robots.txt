@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /assets/*.pdf$
+Disallow: /assets/img/cert-
+Disallow: /assets/img/edu-
+Disallow: /assets/img/exp-
 
 Sitemap: https://somyaranjansahoo6422.github.io/sitemap.xml
