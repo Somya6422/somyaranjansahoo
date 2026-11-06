@@ -199,7 +199,7 @@
     if (run.disabled) return;
     if (blocked(q)) return say(READ_ONLY, 'is-hint');
     run.disabled = true;
-    start().then(function () { return ask(q); })
+    Promise.resolve().then(start).then(function () { return ask(q); })
       .catch(function () { stop(); say('The database couldn’t start just now. Reload the page and try again.', 'is-hint'); })
       .then(function () { run.disabled = false; });
   }
