@@ -72,3 +72,7 @@ The toll project's local git remote (`✅TOLL_PLAZA-SYSTEM/.git/config`) contain
 ## License
 
 The MIT license in this repository covers the code only. Photos, certificates, resume files and other personal content belong to Somya Ranjan Sahoo and the people shown, and may not be reused without permission.
+
+## Publishing a change
+
+After editing `styles.css` or `script.js`, run `node stamp-assets.js` before committing. It updates the version on those two files in every page, so visitors never get a new page with an old cached file.
