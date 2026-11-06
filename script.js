@@ -5,9 +5,6 @@
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Web fonts were loaded as media="print" so they don't block first paint; apply them now.
-  var fontsCss = document.getElementById('fontsCss');
-  if (fontsCss) fontsCss.media = 'all';
   var $ = function (id) { return document.getElementById(id); };
 
   // ---- Opt-in interface sounds (synthesized with Web Audio; nothing plays unless the visitor turns it on) ----
@@ -266,7 +263,6 @@
     var done = false;
     function go() { if (!done) { done = true; fn(); } }
     setTimeout(go, 10000); // a very slow connection gets the page without the intro, never a stand-in hand
-    var css = document.getElementById('fontsCss');
     function fontsGo() {
       if (!document.fonts || !document.fonts.load) return go();
       Promise.all(['400 100px Anton', '600 40px Caveat', '700 40px "Space Grotesk"', '400 16px Inter'].map(function (f) {
@@ -275,7 +271,7 @@
     }
     loadHands().then(function () {
       setTimeout(go, 1800); // fonts alone never hold the hands back for long
-      if (css && !css.sheet) css.addEventListener('load', fontsGo, { once: true }); else fontsGo();
+      fontsGo();
     }, go);
   }
   // A tab opened in the background waits until it is actually seen before the hands start.

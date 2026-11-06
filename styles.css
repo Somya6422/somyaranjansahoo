@@ -1,3 +1,11 @@
+/* Fonts live on this site, trimmed to the characters and weights it uses (SIL Open Font License, see assets/fonts/LICENSE.txt) */
+@font-face { font-family: "Anton"; src: url("assets/fonts/anton.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Caveat"; src: url("assets/fonts/caveat.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk.woff2") format("woff2"); font-weight: 500 700; font-display: swap; }
+@font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk-ext.woff2") format("woff2"); font-weight: 500 700; font-display: swap; unicode-range: U+20B9; }
+@font-face { font-family: "Inter"; src: url("assets/fonts/inter.woff2") format("woff2"); font-weight: 400 600; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("assets/fonts/inter-ext.woff2") format("woff2"); font-weight: 400 600; font-display: swap; unicode-range: U+20B9; }
+@font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jetbrains-mono.woff2") format("woff2"); font-weight: 400 500; font-display: swap; }
 /* =========================================================
    Tokens
    Light-theme accent colours are chosen to meet WCAG AA (4.5:1)
