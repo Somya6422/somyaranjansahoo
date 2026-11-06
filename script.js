@@ -1281,7 +1281,7 @@
       var c = null;
       try { c = JSON.parse(localStorage.getItem('gh:all') || 'null'); } catch (e) {}
       if (c && Date.now() - c.t < 3600000) return (ghAll = Promise.resolve(c.d));
-      ghAll = ghGet('https://api.github.com/users/Somya6422/repos?per_page=100&sort=pushed')
+      ghAll = ghGet('https://api.github.com/users/somyaranjansahoo6422/repos?per_page=100&sort=pushed')
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (list) {
           if (!list) return null;
@@ -1370,7 +1370,7 @@
     certs: function () { tLine(document.querySelectorAll('.cred').length + ' certificates · ' + document.querySelectorAll('.medal').length + ' awards & badges'); Array.prototype.slice.call(document.querySelectorAll('.medal')).slice(0, 6).forEach(function (m) { tLine('  ★ ' + m.querySelector('.medal__big').textContent + ' — ' + m.querySelector('.medal__what').textContent); }); tLine('Type "cd credentials" to see them all.', 'term__dim'); },
     resume: function (arg) { var pl = /^pl|^place|^campus/i.test(arg || ''); tLine('Downloading resume' + (pl ? ' (placement format)…' : '…')); var a = document.createElement('a'); a.href = pl ? 'assets/Somya-Ranjan-Sahoo-Resume-Placement.pdf' : 'assets/Somya-Ranjan-Sahoo-Resume.pdf'; a.download = ''; document.body.appendChild(a); a.click(); a.remove(); },
     contact: function () { tLink('6422somyaranjansahoo@gmail.com', 'mailto:6422somyaranjansahoo@gmail.com'); tLine('Or type "hire" to jump straight to the form.', 'term__dim'); },
-    socials: function () { tLink('github.com/Somya6422', 'https://github.com/Somya6422'); tLink('linkedin.com/in/somya-ranjan-sahoo-109599312', 'https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/'); tLink('instagram.com/somya_ranjan__22', 'https://www.instagram.com/somya_ranjan__22/'); },
+    socials: function () { tLink('github.com/somyaranjansahoo6422', 'https://github.com/somyaranjansahoo6422'); tLink('linkedin.com/in/somya-ranjan-sahoo-109599312', 'https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/'); tLink('instagram.com/somya_ranjan__22', 'https://www.instagram.com/somya_ranjan__22/'); },
     ls: function () { tLine('work/  data/  about/  experience/  credentials/  resume/  contact/'); },
     cd: function (arg) { var id = (arg || '').replace(/\/$/, '').toLowerCase(); if (!$(id) || !/^(work|data|about|experience|credentials|resume|contact)$/.test(id)) return tLine('cd: no such section: ' + (arg || ''), 'term__err'); goTo(id); },
     theme: function (arg) { var cur = root.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); if (!arg || arg !== cur) $('themeToggle').click(); tLine('Theme: ' + (root.getAttribute('data-theme') || cur)); },
@@ -1495,7 +1495,7 @@
         scrollToEl(c);
       } });
     });
-    [['GitHub', 'https://github.com/Somya6422'], ['LinkedIn', 'https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/'], ['Instagram', 'https://www.instagram.com/somya_ranjan__22/']].forEach(function (l) {
+    [['GitHub', 'https://github.com/somyaranjansahoo6422'], ['LinkedIn', 'https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/'], ['Instagram', 'https://www.instagram.com/somya_ranjan__22/']].forEach(function (l) {
       it.push({ g: 'Links', label: l[0], hint: 'Opens in a new tab', run: function () { window.open(l[1], '_blank', 'noopener'); } });
     });
     (window.__extraCmds || []).forEach(function (x) { it.splice(1, 0, x); });
@@ -1843,7 +1843,7 @@
       '<li><strong>Smart Toll Plaza</strong> <span>· real-time number-plate recognition + Pan-India GIS dashboard (Python, OpenCV)</span></li></ul></div>' +
     '<div class="qv__block"><h3>Experience</h3><ul><li><strong>Python Developer Intern</strong> <span>· The Entrepreneurship Network · 3 months · letter of recommendation</span></li><li><strong>Python Programming Intern</strong> <span>· InternPe · 6 weeks</span></li></ul></div>' +
     '<div class="qv__block"><h3>Skills</h3><ul><li><strong>Languages</strong> <span>· Python, SQL, Node.js, C, HTML/CSS</span></li><li><strong>Tools</strong> <span>· FastAPI, Streamlit, OpenCV, pandas, Git, Excel</span></li><li><strong>Certificates</strong> <span>· 30, incl. Google Data Analysis with Python</span></li></ul></div>' +
-    '<div class="qv__block qv__wide"><h3>Contact</h3><ul><li><a class="link" href="mailto:6422somyaranjansahoo@gmail.com">6422somyaranjansahoo@gmail.com</a> · <a class="link" href="https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a class="link" href="https://github.com/Somya6422" target="_blank" rel="noopener noreferrer">GitHub</a></li></ul></div>' +
+    '<div class="qv__block qv__wide"><h3>Contact</h3><ul><li><a class="link" href="mailto:6422somyaranjansahoo@gmail.com">6422somyaranjansahoo@gmail.com</a> · <a class="link" href="https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a class="link" href="https://github.com/somyaranjansahoo6422" target="_blank" rel="noopener noreferrer">GitHub</a></li></ul></div>' +
     '</div><div class="qv__foot"><a class="btn btn--primary btn--sm" href="assets/Somya-Ranjan-Sahoo-Resume.pdf" download>Download resume</a>' +
     '<button type="button" class="btn btn--ghost btn--sm" id="qvCopy">Copy as text</button><button type="button" class="btn btn--ghost btn--sm" id="qvPrint">Print</button>' +
     '<a class="btn btn--ghost btn--sm" href="#contact" id="qvContact">Contact me</a></div>';
