@@ -1,6 +1,6 @@
 # Somya Ranjan Sahoo
 
-> Portfolio of Somya Ranjan Sahoo (Sonu), an aspiring data analyst and software developer from Bhubaneswar, Odisha, India. He is a B.Tech Computer Science and Engineering student at GITA Autonomous College, working with Python, SQL, Excel and Node.js, and is open to internships and hackathon teams.
+> Portfolio of Somya Ranjan Sahoo (Sonu), an aspiring data analyst and software developer from Bhubaneswar, Odisha, India. He is a B.Tech Computer Science and Engineering student at GITA Autonomous College, working with Python, SQL and Excel, and is open to internships and hackathon teams.
 
 The whole portfolio is one page, https://somyaranjansahoo6422.github.io/, and the links below go to its sections.
 

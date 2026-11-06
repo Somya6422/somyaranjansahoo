@@ -1749,7 +1749,7 @@
     });
     var esc = function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, function (m) { return '\\' + m; }); };
     function tokensOf(label) {
-      return label.toLowerCase().split(/\s*(?:&|\/|,|\band\b)\s*/).map(function (t) { return t.trim(); }).filter(Boolean);
+      return label.toLowerCase().replace(/\s*\(basics\)/, '').split(/\s*(?:&|\/|,|\band\b)\s*/).map(function (t) { return t.trim(); }).filter(Boolean);
     }
     function proves(item, tokens) {
       return tokens.some(function (t) {
