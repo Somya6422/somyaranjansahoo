@@ -977,8 +977,6 @@ p, li, dd { text-wrap: pretty; }
    Stage hero: giant word, portrait in front, stats rail
    ========================================================= */
 .stage { --word: clamp(4.4rem, 17vw, 15rem); position: relative; padding: 0 0 84px; overflow: hidden; min-height: calc(100svh - 70px); }
-/* Phones lay out at desktop width, so a portrait screen is thousands of pixels tall: let the hero size to its content. */
-@media (min-width: 761px) and (max-aspect-ratio: 1/1) { .stage { min-height: 0; } }
 .stage__word {
   position: absolute; left: 50%; top: 18px; z-index: 0; display: flex; white-space: nowrap;
   transform: translate(-50%, var(--py, 0px));
@@ -1659,20 +1657,7 @@ main .section :is(.section__head > *, .group-title, .filters, .viewtoggle, .case
 .lightbox__nav[hidden] { display: none; }
 .lightbox__count { position: fixed; left: 50%; top: 18px; transform: translateX(-50%); margin: 0; padding: 6px 12px; border-radius: 999px; background: rgba(15, 17, 22, .6); color: #fff; font-size: .8rem; }
 .lightbox__count:empty { display: none; }
-/* Phones show the desktop layout zoomed out, so full-screen controls are scaled up to stay reachable. */
-.is-phone .lightbox__close { top: 12px; right: 12px; width: 120px; height: 120px; }
-.is-phone .lightbox__close svg { width: 60px; height: 60px; }
-.is-phone .lightbox__nav { width: 130px; height: 130px; margin-top: -65px; }
-.is-phone .lightbox__nav svg { width: 64px; height: 64px; }
-.is-phone .lightbox p { font-size: 2.3rem; line-height: 1.25; }
-.is-phone .lightbox__count { font-size: 2rem; padding: 12px 26px; }
-.is-phone .deep__close { width: 120px; height: 120px; }
-.is-phone .deep__close svg { width: 56px; height: 56px; }
-.is-phone .deep__btn { min-height: 110px; padding: 0 40px; font-size: 2rem; }
-.is-phone .term__close { width: 110px; height: 110px; }
-.is-phone .term__close svg { width: 52px; height: 52px; }
-.is-phone .to-top { transform: scale(2.2); transform-origin: bottom right; }
-:root[data-touch="1"] .cmdk-btn__k, .is-phone .cmdk-btn__k { display: none !important; }
+:root[data-touch="1"] .cmdk-btn__k { display: none !important; }
 .lightbox, .lightbox::backdrop, .lightbox img { touch-action: pan-y pinch-zoom; }
 .lightbox img { user-select: none; -webkit-user-drag: none; }
 @media (max-width: 760px) { .lightbox__nav { top: auto; bottom: 18px; margin-top: 0; } .lightbox__nav--prev { left: 18px; } .lightbox__nav--next { right: 18px; } }

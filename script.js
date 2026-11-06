@@ -46,18 +46,18 @@
   }
 
 
-  // ---- Device-aware experience: a narrow desktop window gets the compact interface ----
+  // ---- Device-aware experience: phone / tablet / desktop ----
   function detectDevice() {
     var w = window.innerWidth;
     if (w <= 760) return 'phone';
     if (w <= 1100) return 'tablet';
+    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches && w <= 1366) return 'tablet';
     return 'desktop';
   }
   function applyDevice() {
     var d = detectDevice();
     root.setAttribute('data-device', d);
     root.setAttribute('data-touch', window.matchMedia('(hover: none)').matches ? '1' : '0');
-    root.classList.toggle('is-phone', window.matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) <= 600);
   }
   applyDevice();
   var deviceTimer;
