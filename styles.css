@@ -864,6 +864,13 @@ p, li, dd { text-wrap: pretty; }
 .cred-feature__cta .btn svg { width: 16px; height: 16px; }
 
 .cred-filters { margin-bottom: 18px; }
+.best5 { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.best5 a { display: flex; flex-direction: column; gap: 6px; height: 100%; padding: 16px; border-radius: 14px; border: 1px solid var(--line); border-top: 3px solid var(--accent); background: var(--surface); color: inherit; text-decoration: none; transition: border-color .2s ease; }
+.best5 a:hover { border-color: var(--accent); }
+.best5 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.best5__n { font-size: .78rem; color: var(--accent); }
+.best5 strong { font: 600 1rem/1.25 var(--font-display); }
+.best5 a > span:last-child { font-size: .86rem; line-height: 1.4; color: var(--muted); }
 .creds { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px; }
 .cred {
   --cat: var(--accent);

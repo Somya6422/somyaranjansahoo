@@ -962,7 +962,7 @@
     credBar.hidden = false;
 
     // Show the first 12 under "All"; the rest behind a button.
-    var LIMIT = 12, expanded = false, moreBtn = $('credMore');
+    var LIMIT = 6, expanded = false, moreBtn = $('credMore');
     function collapse(on) {
       creds.forEach(function (c, i) { c.classList.toggle('is-collapsed', on && i >= LIMIT); });
       if (moreBtn) moreBtn.hidden = !on;
