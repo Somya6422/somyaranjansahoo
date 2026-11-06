@@ -511,6 +511,9 @@
     eggBuf = (eggBuf + (e.key || '').toLowerCase()).slice(-4);
     if (eggBuf !== 'sonu') return;
     eggBuf = '';
+    sayHi();
+  });
+  function sayHi() {
     var L = fxHand('code'), Rh = fxHand('design'); if (!L || !Rh) return;
     var H = window.innerHeight, Wd = window.innerWidth;
     L.move(Wd * 0.4, H + 40, 0); Rh.move(Wd * 0.6, H + 40, 0);
@@ -519,10 +522,10 @@
     setTimeout(function () { L.wave(900); Rh.wave(900); }, 1100);
     setTimeout(function () { L.move(-160, H + 120, 520); Rh.move(Wd + 160, H + 120, 520); }, 2050);
     setTimeout(function () { L.el.remove(); Rh.el.remove(); }, 2650);
-  });
+  }
 
   // ---- Sections: two hands place every block as it scrolls into view (on every page load) ----
-  if (building && 'IntersectionObserver' in window) (function () {
+  function sectionHands() {
     var SEL = [
       '.section__head > *', '.group-title', '.filters', '.viewtoggle', '.case', '.cards > .card',
       '.prose > p', '.prose__sub', '.principles li', '.remarks .quote', '.skill-group',
@@ -646,6 +649,32 @@
       });
     }, { threshold: 0.2, rootMargin: '0px 0px -6% 0px' });
     waiting.forEach(function (el) { io.observe(el); });
+  }
+  if (building && 'IntersectionObserver' in window) sectionHands();
+
+  // ---- Phones: the page shows finished first, then my hands arrive once it has loaded ----
+  // Nothing on the first screen waits for them. They place each block as you scroll and say hi on your first touch.
+  if (root.classList.contains('intro-lite') && !(navigator.connection && navigator.connection.saveData) && 'IntersectionObserver' in window) (function () {
+    var touched = false, ready = false, said = false;
+    function hi() {
+      if (said || !touched || !ready) return;
+      said = true;
+      try { if (sessionStorage.getItem('handsHi')) return; sessionStorage.setItem('handsHi', '1'); } catch (e) {}
+      sayHi();
+    }
+    ['touchstart', 'pointerdown', 'scroll'].forEach(function (ev) {
+      window.addEventListener(ev, function () { touched = true; hi(); }, { once: true, passive: true });
+    });
+    function bringHands() {
+      loadHands().then(function (RH) {
+        if (!RH || !RH.ready) return;
+        Array.prototype.forEach.call(document.querySelectorAll('.reveal'), function (e) { e.classList.remove('reveal', 'in'); });
+        sectionHands();
+        ready = true; hi();
+      });
+    }
+    function soon() { setTimeout(bringHands, 800); }
+    if (document.readyState === 'complete') soon(); else window.addEventListener('load', soon, { once: true });
   })();
 
   // ---- Horizontal rows: drag with a mouse, plus a visible bar and arrow buttons ----
