@@ -329,6 +329,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .eyebrow::before { content: ""; width: 0; height: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--accent-fill), var(--accent-2)); transition: width .8s var(--ease) .15s; }
 .eyebrow.drawn::before { width: 28px; }
 .two-col { display: grid; grid-template-columns: 1fr 2fr; gap: 48px; }
+.two-col > * { min-width: 0; }
 .two-col > .section__head { position: sticky; top: 100px; align-self: start; }
 
 .prose p { font-size: 1.05rem; color: var(--muted); }
@@ -1668,6 +1669,8 @@ main .section :is(.section__head > *, .group-title, .filters, .viewtoggle, .case
   font: 500 .76rem/1.2 var(--font-mono); color: var(--muted); text-decoration: none;
   background: var(--surface); border: 1px solid var(--line); transition: border-color .2s ease, color .2s ease;
 }
+.gh { max-width: 100%; }
+.gh__repo { min-width: 0; overflow-wrap: anywhere; }
 .gh:hover { border-color: var(--accent-fill); color: var(--text); }
 .gh svg { width: 15px; height: 15px; color: var(--text); }
 .gh b { font-weight: 400; opacity: .6; }
