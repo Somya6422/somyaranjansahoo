@@ -652,20 +652,19 @@
   }
   if (building && 'IntersectionObserver' in window) sectionHands();
 
-  // ---- Phones: the page shows finished first, then my hands arrive once it has loaded ----
-  // Nothing on the first screen waits for them. They place each block as you scroll and say hi on your first touch.
+  // ---- Phones: the page shows finished first, and my hands arrive on the visitor's first touch or scroll ----
+  // They cost the first load nothing at all: not one byte is fetched until someone starts using the page.
   if (root.classList.contains('intro-lite') && !(navigator.connection && navigator.connection.saveData) && 'IntersectionObserver' in window) (function () {
-    var touched = false, ready = false, said = false;
+    var asked = false, ready = false, said = false;
     function hi() {
-      if (said || !touched || !ready) return;
+      if (said || !ready) return;
       said = true;
       try { if (sessionStorage.getItem('handsHi')) return; sessionStorage.setItem('handsHi', '1'); } catch (e) {}
       sayHi();
     }
-    ['touchstart', 'pointerdown', 'scroll'].forEach(function (ev) {
-      window.addEventListener(ev, function () { touched = true; hi(); }, { once: true, passive: true });
-    });
     function bringHands() {
+      if (asked) return;
+      asked = true;
       loadHands().then(function (RH) {
         if (!RH || !RH.ready) return;
         Array.prototype.forEach.call(document.querySelectorAll('.reveal'), function (e) { e.classList.remove('reveal', 'in'); });
@@ -673,8 +672,9 @@
         ready = true; hi();
       });
     }
-    function soon() { setTimeout(bringHands, 800); }
-    if (document.readyState === 'complete') soon(); else window.addEventListener('load', soon, { once: true });
+    ['touchstart', 'pointerdown', 'scroll'].forEach(function (ev) {
+      window.addEventListener(ev, bringHands, { once: true, passive: true });
+    });
   })();
 
   // ---- Horizontal rows: drag with a mouse, plus a visible bar and arrow buttons ----
