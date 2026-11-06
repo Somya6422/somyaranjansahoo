@@ -1314,7 +1314,7 @@
         ghIo.unobserve(en.target);
         var repo = en.target._gh.repo, p = en.target._gh.el, key = 'gh:' + repo, cached = null;
         try { cached = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
-        var mine = /^somya6422\//i.test(repo);
+        var mine = /^somyaranjansahoo6422\//i.test(repo);
         var got = mine ? ghRepos().then(function (list) { var r = (list || []).filter(function (x) { return x.full === repo.toLowerCase(); })[0]; return r ? { lang: r.lang, stars: r.stars, pushed: r.pushed, url: r.url } : null; })
           : cached && Date.now() - cached.t < 3600000 ? Promise.resolve(cached.d)
           : ghGet('https://api.github.com/repos/' + repo)
