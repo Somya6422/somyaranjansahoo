@@ -1082,6 +1082,31 @@
       submit.setAttribute('aria-busy', String(on));
       label.textContent = on ? 'Sending…' : 'Send message';
     }
+    // Web3Forms needs an hCaptcha token with each message. The widget loads only once someone starts
+    // using the form, so people who just read the site never connect to hCaptcha.
+    var captchaBox = $('f-captcha');
+    var captchaId = null, captchaState = w3fKey && captchaBox ? 'idle' : 'off';
+    function loadCaptcha() {
+      if (captchaState !== 'idle') return;
+      captchaState = 'loading';
+      captchaBox.parentNode.hidden = false;
+      window.onCaptchaReady = function () {
+        var theme = root.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        captchaId = window.hcaptcha.render(captchaBox, {
+          sitekey: '50b2fe65-b00b-4b9e-ad62-3ba471098be2', // Web3Forms' shared key for free plans
+          theme: theme,
+          size: captchaBox.clientWidth < 304 ? 'compact' : 'normal'
+        });
+        captchaState = 'ready';
+      };
+      var s = document.createElement('script');
+      s.src = 'https://js.hcaptcha.com/1/api.js?render=explicit&recaptchacompat=off&onload=onCaptchaReady';
+      s.async = true;
+      s.onerror = function () { captchaState = 'failed'; captchaBox.parentNode.hidden = true; };
+      document.head.appendChild(s);
+    }
+    form.addEventListener('focusin', loadCaptcha);
+    form.addEventListener('pointerdown', loadCaptcha);
     function topicValue() { var t = form.querySelector('input[name="topic"]:checked'); return t ? t.value : 'General enquiry'; }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -1089,6 +1114,16 @@
       if (bad) { setNote('Please fix the highlighted fields.', 'err', false); bad.focus(); return; }
       if ($('f-honey').value) { setNote('Your message could not be sent.', 'err', true); return; }
       if (!window.fetch || !endpoint) { form.submit(); return; } // plain POST fallback
+      var token = '';
+      if (captchaState !== 'off') {
+        token = captchaState === 'ready' ? window.hcaptcha.getResponse(captchaId) : '';
+        if (!token) {
+          if (captchaState === 'failed') { setNote('The spam check didn’t load, so the form can’t send right now.', 'err', true); return; }
+          loadCaptcha();
+          setNote('Please complete the “I am human” check above the button.', 'err', false);
+          return;
+        }
+      }
       sending(true);
       setNote('Sending your message…', '', false);
       var payload = {
@@ -1102,6 +1137,7 @@
         _honey: ''
       };
       if (w3fKey) payload = { access_key: w3fKey, name: payload.name, email: payload.email, message: payload.message, topic: payload.topic, consent: payload.consent, subject: payload._subject, from_name: 'Portfolio contact form', botcheck: '' };
+      if (token) payload['h-captcha-response'] = token;
       var controller = window.AbortController ? new AbortController() : null;
       var timer = setTimeout(function () { if (controller) controller.abort(); }, 9000);
       fetch(endpoint, {
@@ -1130,7 +1166,11 @@
         }
       }).catch(function () {
         setNote('The message service isn’t reachable right now.', 'err', true);
-      }).then(function () { clearTimeout(timer); sending(false); });
+      }).then(function () {
+        clearTimeout(timer);
+        sending(false);
+        if (token) window.hcaptcha.reset(captchaId); // each token works only once
+      });
     });
   }
 

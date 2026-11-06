@@ -572,6 +572,8 @@ a.thumb, a.card__img, a.case__media, .study__gallery a { cursor: zoom-in; }
 .spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; display: none; }
 .form.is-sending .spinner { display: inline-block; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+.form__captcha { min-height: 78px; max-width: 100%; overflow: hidden; }
+.form__captcha[hidden] { display: none; }
 .form__note { margin: 0; font-size: .86rem; color: var(--muted); }
 .form__note.is-ok { color: var(--ok); font-weight: 600; }
 .form__note.is-err { color: var(--danger); font-weight: 500; }
