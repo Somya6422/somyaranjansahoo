@@ -45,14 +45,13 @@ Every push to `main` then updates the site. The repository must stay public on a
 1. Register the domain, then add it under **Settings > Pages > Custom domain** and follow the DNS records GitHub shows.
 2. Replace the `somyaranjansahoo6422.github.io` address in `index.html`, `robots.txt`, `sitemap.xml` and the resume sources.
 
-## Contact form (FormSubmit)
+## Contact form (Web3Forms)
 
-The form posts to [FormSubmit](https://formsubmit.co), which emails submissions to `6422somyaranjansahoo@gmail.com`. No API key or secret is stored in the code.
+With JavaScript on, the form posts to [Web3Forms](https://web3forms.com), which emails submissions to the inbox tied to the access key. The key sits in `data-w3f` on `#contactForm` in `index.html`. Web3Forms keys are made for use in a public page, so it is not a secret.
 
-- **One-time activation:** the first submission makes FormSubmit send an activation email to that inbox. Click the link in it once. Until then, submissions are not delivered — the form shows an error with a "email me directly" fallback, never a false success.
-- **Optional:** after activation FormSubmit gives you a random alias. Replace the email in the form's `action` and `data-endpoint` with that alias to keep the address out of the HTML.
-- **Spam protection:** a hidden honeypot field (`_honey`) plus required consent and validation. Without JavaScript the form still works as a normal POST (FormSubmit then shows its own captcha page).
-- To switch providers, change `action` and `data-endpoint` on `#contactForm` in `index.html`, and `connect-src` / `form-action` in the Content-Security-Policy tag of each page, and update `privacy.html`.
+- **Backup:** with JavaScript off, the form does a normal POST to [FormSubmit](https://formsubmit.co) instead. FormSubmit sends a one-time activation email to the inbox on its first submission.
+- **Spam protection:** a hidden honeypot field (`_honey`) plus required consent and validation.
+- To switch providers, change `data-w3f`, `action` and `data-endpoint` on `#contactForm`, and `connect-src` / `form-action` in the Content-Security-Policy.
 
 ## Resume
 
