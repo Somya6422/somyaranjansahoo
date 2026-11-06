@@ -31,7 +31,7 @@ Then open http://localhost:4321.
 
 1. On GitHub open the repository, then **Settings > Pages**.
 2. Under **Build and deployment**, set **Source** to *Deploy from a branch*, **Branch** to `main` and the folder to `/ (root)`, then **Save**.
-3. After a minute or two the site is live at https://somya6422.github.io/somyaranjansahoo/
+3. After a minute or two the site is live at https://somyaranjansahoo6422.github.io/
 
 Every push to `main` then updates the site. The repository must stay public on a free GitHub plan.
 
@@ -43,8 +43,7 @@ Every push to `main` then updates the site. The repository must stay public on a
 ### Moving to a custom domain later
 
 1. Register the domain, then add it under **Settings > Pages > Custom domain** and follow the DNS records GitHub shows.
-2. Replace the `somya6422.github.io/somyaranjansahoo` address in `index.html`, `robots.txt`, `sitemap.xml` and the resume sources.
-3. Change `<base href="/somyaranjansahoo/">` in `404.html` to `<base href="/">`.
+2. Replace the `somyaranjansahoo6422.github.io` address in `index.html`, `robots.txt`, `sitemap.xml` and the resume sources.
 
 ## Contact form (FormSubmit)
 
