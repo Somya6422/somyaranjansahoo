@@ -311,10 +311,11 @@ LIMIT 10;</textarea>
               <details class="study">
                 <summary>Read the case study</summary>
                 <dl class="study__grid">
-                  <div><dt>Architecture</dt><dd>A Streamlit multipage app with four pages: sign-in, Live Camera, GIS Command Center and Analytics. A <code>CloudSQLAdapter</code> class stores transactions, security audits and shift closures in a JSON file, behind an interface meant to be swapped for a cloud SQL database later.</dd></div>
+                  <div><dt>Architecture</dt><dd>A Streamlit multipage app behind a sign-in, with four pages: Operations Overview, Live Camera, GIS Command Center and Analytics. A <code>CloudSQLAdapter</code> class stores transactions, security audits and shift closures in a JSON file, behind an interface meant to be swapped for a cloud SQL database later.</dd></div>
                   <div><dt>Data flow</dt><dd>WebRTC camera frame → every third frame → FastALPR (YOLOv9 plate detector + MobileViT OCR) → confidence ≥ 0.50 → Indian plate-format check → blacklist screening or diplomatic exemption → simulated FASTag or cash charge → ledger and audit entry.</dd></div>
                   <div><dt>Map &amp; analytics</dt><dd>A national toll-plaza registry (2,000+ rows) cleaned with pandas and plotted with Plotly's map view; analytics show payment mix and revenue by vehicle type; prices rise 1.15× in peak hours.</dd></div>
                   <div><dt>Hardest problem</dt><dd>Making a demo that runs on any machine. The data adapter needs no cloud credentials, and plate validation accepts standard, Bharat-series and diplomatic plates while throwing out OCR noise.</dd></div>
+                  <div><dt>Testing</dt><dd>20 automated tests cover plate validation, peak-hour pricing, the data store and sign-in, and GitHub Actions runs them on every push.</dd></div>
                   <div><dt>Scope</dt><dd>It's a simulation for learning and demos, and it isn't connected to live FASTag, VAHAN or NHAI systems. It grew out of my Class XII toll-management project.</dd></div>
                 </dl>
                 <div class="study__gallery study__gallery--wide">
