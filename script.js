@@ -1356,7 +1356,7 @@
   var projs = function () { return Array.prototype.slice.call(document.querySelectorAll('#work [data-cats]')); };
   var CMDS = {
     help: function () { tLine('Commands:'); [['whoami', 'who I am'], ['about', 'the short story'], ['projects', 'list my projects'], ['open <n>', 'jump to project n'], ['skills', 'what I work with'], ['experience', 'internships'], ['education', 'where I studied'], ['certs', 'certificates & badges'], ['resume [placement]', 'download my resume'], ['contact', 'how to reach me'], ['socials', 'profiles'], ['ls / cd <section>', 'browse sections'], ['theme [light|dark]', 'switch theme'], ['clear', 'clear the screen'], ['replay', 'replay the intro'], ['exit', 'close']].forEach(function (c) { tLine('  ' + (c[0] + '                  ').slice(0, 19) + c[1]); }); },
-    whoami: function () { tLine('Somya Ranjan Sahoo (Sonu)'); tLine('Software developer · Node.js · Python · SQL · Excel'); tLine('B.Tech CSE, GITA Autonomous College ’29 · Team ASTRA-X'); },
+    whoami: function () { tLine('Somya Ranjan Sahoo (Sonu)'); tLine('Aspiring data analyst · Software developer · Python · SQL · Excel'); tLine('B.Tech CSE, GITA Autonomous College ’29 · Team ASTRA-X'); },
     about: function () { tLine(txt('#about .prose > p')); },
     projects: function () { projs().forEach(function (p, i) { tLine(('0' + (i + 1)).slice(-2) + '  ' + txt('#' + p.id + ' h3')); }); tLine('Type "open <number>" to jump to one.', 'term__dim'); },
     open: function (arg) {
@@ -1832,7 +1832,7 @@
   var qv = document.createElement('dialog');
   qv.className = 'qv'; qv.id = 'qv'; qv.setAttribute('aria-labelledby', 'qvName');
   qv.innerHTML = '<div class="qv__head"><img class="qv__avatar" src="assets/img/profile-240.webp" alt="" width="64" height="64">' +
-    '<div><h2 class="qv__name" id="qvName">Somya Ranjan Sahoo</h2><p class="qv__role">Software developer · Node.js · Python · SQL · Excel</p></div>' +
+    '<div><h2 class="qv__name" id="qvName">Somya Ranjan Sahoo</h2><p class="qv__role">Aspiring data analyst · Software developer · Python · SQL · Excel</p></div>' +
     '<button type="button" class="qv__close" aria-label="Close summary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
     '<div class="qv__body">' +
     '<div class="qv__block"><h3>Studying</h3><ul><li><strong>B.Tech CSE</strong> <span>· GITA Autonomous College, Bhubaneswar · 2025–2029</span></li><li><strong>Sainik School Bhubaneswar</strong> <span>· Class VI–XII · NCC A &amp; B</span></li></ul></div>' +
@@ -2073,7 +2073,7 @@
   if (share) {
     var canon = document.querySelector('link[rel="canonical"]');
     var shareUrl = canon ? canon.href : location.origin + location.pathname;
-    var shareText = 'Somya Ranjan Sahoo · Software developer portfolio';
+    var shareText = 'Somya Ranjan Sahoo · Aspiring data analyst and software developer';
     $('shareUrl').textContent = shareUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
     $('shareWa').href = 'https://wa.me/?text=' + encodeURIComponent(shareText + ' ' + shareUrl);
     $('shareLi').href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareUrl);
