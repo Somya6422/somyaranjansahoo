@@ -1256,7 +1256,7 @@
       gi = (i + group.length) % group.length;
       var a = group[gi], img = a.querySelector('img');
       boxImg.src = a.getAttribute('href');
-      boxImg.alt = img ? img.alt : '';
+      boxImg.alt = (img && img.alt) || 'Enlarged view of the selected image';
       boxCap.textContent = a.getAttribute('data-caption') || (img ? img.alt : '');
       count.textContent = group.length > 1 ? (gi + 1) + ' / ' + group.length : '';
       prevB.hidden = nextB.hidden = group.length < 2;
@@ -1648,7 +1648,7 @@
     var thumbs = el('div', 'deep__thumbs');
     shots.forEach(function (s, k) {
       var t = el('button', 'deep__thumb'); t.type = 'button'; t.setAttribute('aria-label', 'Show image ' + (k + 1) + ': ' + (s.cap || s.alt));
-      var ti = el('img'); ti.src = s.href; ti.alt = ''; ti.loading = 'lazy'; t.appendChild(ti);
+      var ti = el('img'); ti.src = s.href; ti.alt = s.alt || s.cap || 'Project screenshot ' + (k + 1); ti.loading = 'lazy'; t.appendChild(ti);
       t.addEventListener('click', function () { showShot(k); });
       thumbs.appendChild(t);
     });
@@ -1872,7 +1872,7 @@
   // ---- Recruiter quick view: the whole profile in 60 seconds ----
   var qv = document.createElement('dialog');
   qv.className = 'qv'; qv.id = 'qv'; qv.setAttribute('aria-labelledby', 'qvName');
-  qv.innerHTML = '<div class="qv__head"><img class="qv__avatar" src="assets/img/profile-240.webp" alt="" width="64" height="64">' +
+  qv.innerHTML = '<div class="qv__head"><img class="qv__avatar" src="assets/img/profile-240.webp" alt="Somya Ranjan Sahoo" width="64" height="64">' +
     '<div><h2 class="qv__name" id="qvName">Somya Ranjan Sahoo</h2><p class="qv__role">Aspiring data analyst · Software developer · Python · SQL · Excel</p></div>' +
     '<button type="button" class="qv__close" aria-label="Close summary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
     '<div class="qv__body">' +
