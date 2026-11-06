@@ -227,13 +227,6 @@
   if (building) loadHands();
   var buildDone = !building;
   function onBuilt(fn) { if (buildDone) fn(); else document.addEventListener('build:done', fn, { once: true }); }
-  var HAND_PATHS = {
-    open: '<path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>',
-    grab: '<path d="M18 11.5V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1.4"/><path d="M14 10V8a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 9.9V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v5"/><path d="M6 14a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8 2 2 0 1 1 4 0"/>'
-  };
-  function handSvg(kind) {
-    return '<svg class="hand__' + kind + '" viewBox="0 0 24 24" aria-hidden="true"><g class="o">' + HAND_PATHS[kind] + '</g><g class="i">' + HAND_PATHS[kind] + '</g></svg>';
-  }
   // Each hand works its own half of the page: my right hand ('design') takes whatever sits right of the
   // centre line, my left hand ('code') whatever sits left of it.
   function sideTone(r) { return r.left + r.width / 2 >= window.innerWidth / 2 ? 'design' : 'code'; }
@@ -243,7 +236,7 @@
     if (tone === 'code' && x > mid) return Math.max(left + 24, mid - 60);
     return x;
   }
-  // A hand cursor with its own selection box, living inside an overlay layer.
+  // My real 3D hand with its selection box, living inside an overlay layer. Callers check RealHand.ready first.
   function makeHand(layer, label, tone) {
     var sel = document.createElement('div');
     sel.className = 'bp__sel';
@@ -254,35 +247,15 @@
       sel.style.width = w + 'px'; sel.style.height = h + 'px';
     };
     var labelFn = function (tag, w, h) { sel.querySelector('.bp__tag').textContent = tag; sel.querySelector('.bp__size').textContent = Math.round(w) + ' × ' + Math.round(h); };
-    // The real 3D hand (built from a photo of my hand) once its texture is loaded; the line icon otherwise.
-    if (window.RealHand && window.RealHand.ready) {
-      layer.appendChild(sel);
-      var rh = window.RealHand.create(layer, label, tone);
-      return { el: rh.el, sel: sel, move: rh.move, follow: rh.follow, tap: rh.tap, pose: rh.pose, grip: rh.grip, press: rh.press, wave: rh.wave, box: boxFn, label: labelFn };
-    }
-    var el = document.createElement('div');
-    el.className = 'hand hand--' + tone;
-    el.innerHTML = handSvg('open') + handSvg('grab') + '<span class="hand__label">' + label + '</span>';
     layer.appendChild(sel);
-    layer.appendChild(el);
-    return {
-      el: el, sel: sel,
-      move: function (x, y, ms) { el.style.transitionDuration = ms + 'ms'; el.style.transform = 'translate(' + x + 'px,' + y + 'px)'; },
-      grip: function (on) { el.classList.toggle('is-grab', on); },
-      press: function () {}, wave: function () {},
-      box: function (x, y, w, h, ms) {
-        sel.style.transitionDuration = ms + 'ms';
-        sel.style.transform = 'translate(' + x + 'px,' + y + 'px)';
-        sel.style.width = w + 'px'; sel.style.height = h + 'px';
-      },
-      label: function (tag, w, h) { sel.querySelector('.bp__tag').textContent = tag; sel.querySelector('.bp__size').textContent = Math.round(w) + ' × ' + Math.round(h); }
-    };
+    var rh = window.RealHand.create(layer, label, tone);
+    return { el: rh.el, sel: sel, move: rh.move, follow: rh.follow, tap: rh.tap, pose: rh.pose, grip: rh.grip, press: rh.press, wave: rh.wave, box: boxFn, label: labelFn };
   }
 
   function whenReady(fn) {
     var done = false;
     function go() { if (!done) { done = true; fn(); } }
-    setTimeout(go, 1800); // never wait longer than this
+    setTimeout(go, 10000); // a very slow connection gets the page without the intro, never a stand-in hand
     var css = document.getElementById('fontsCss');
     function fontsGo() {
       if (!document.fonts || !document.fonts.load) return go();
@@ -290,10 +263,10 @@
         return document.fonts.load(f).catch(function () {});
       })).then(go, go);
     }
-    var handGo = building ? loadHands() : Promise.resolve();
-    var fontsGoReal = fontsGo;
-    fontsGo = function () { handGo.then(fontsGoReal, fontsGoReal); };
-    if (css && !css.sheet) css.addEventListener('load', fontsGo, { once: true }); else fontsGo();
+    loadHands().then(function () {
+      setTimeout(go, 1800); // fonts alone never hold the hands back for long
+      if (css && !css.sheet) css.addEventListener('load', fontsGo, { once: true }); else fontsGo();
+    }, go);
   }
   // A tab opened in the background waits until it is actually seen before the hands start.
   function whenVisible(fn) {
@@ -319,13 +292,14 @@
   }
   var pace = 1;
   if (building) { try { if (sessionStorage.getItem('intro:seen') === '1') pace = 0.32; sessionStorage.setItem('intro:seen', '1'); } catch (e) {} }
-  if (building) whenVisible(function () { whenReady(function () {
+  if (building) (function () {
+    window.__bp = 1; // this script is running, so the head's safety timer stands down
     var D = 'design', K = 'code';
     // [selector, tag, hand, dx, dy, tilt, grip x, grip y, fast]
     var plan = [
       ['.stage__word', '<div.word>', D, -150, -70, -4, 0.16, 0.55],
       ['.stage .status', '<p.status>', K, 140, -60, -5, 0.5, 0.5],
-      ['.stage__portrait', '<img#portrait>', D, 0, 26, 2, 0.5, 0.32], // visible from the first paint (it is the LCP image): the hand only straightens it
+      ['.stage__portrait', '<img#portrait>', D, 70, 40, 3, 0.5, 0.32], // keep in step with its first-paint offset in styles.css
       ['.stage .role', '<p.role>', D, 200, 40, 3, 0.3, 0.5],
       ['#hero-title', '<h1#hero-title>', D, -190, 110, -3, 0.32, 0.5],
       ['.stage .lede', '<p.lede>', K, -160, 120, 2, 0.4, 0.3],
@@ -339,57 +313,15 @@
       ['.stage .socials li:nth-child(3)', '<a.instagram>', K, -60, 140, -7, 0.5, 0.5, 1],
       ['.stage .socials li:nth-child(4)', '<a.email>', K, 140, 80, 10, 0.5, 0.5, 1]
     ];
-    var steps = plan.map(function (d) { return { el: document.querySelector(d[0]), tag: d[1], hand: d[2], dx: d[3], dy: d[4], rot: d[5], gx: d[6], gy: d[7], fast: !!d[8] }; })
+    var steps = plan.map(function (d) { return { el: document.querySelector(d[0]), tag: d[1], dx: d[3], dy: d[4], rot: d[5], gx: d[6], gy: d[7], fast: !!d[8] }; })
       .filter(function (st) { return st.el; });
     var stage = document.querySelector('.stage');
-    var skipped = false, finished = false;
+    var skipped = false, finished = false, layer = null, skipBtn = null, hands = null;
 
+    // The normal entrance must not run: it would put pieces in place before a hand touches them.
     Array.prototype.forEach.call(document.querySelectorAll('.stage .enter'), function (e) { e.classList.remove('enter'); });
     if (stage) stage.classList.add('no-enter');
     window.scrollTo(0, 0);
-
-    var scale = Math.min(1, window.innerWidth / 1280);
-    var layer = document.createElement('div');
-    layer.className = 'bp';
-    layer.setAttribute('aria-hidden', 'true');
-    layer.innerHTML = '<div class="bp__grid"></div>';
-    document.body.appendChild(layer);
-    var hands = { design: makeHand(layer, 'Design', 'design'), code: makeHand(layer, 'Code', 'code') };
-    var skipBtn = document.createElement('button');
-    skipBtn.type = 'button';
-    skipBtn.className = 'bp__skip';
-    skipBtn.textContent = 'Skip intro';
-    document.body.appendChild(skipBtn);
-
-    steps.forEach(function (st) {
-      var r = st.el.getBoundingClientRect();
-      st.rect = { x: r.left, y: r.top, w: r.width, h: r.height };
-      st.dx *= scale; st.dy *= scale;
-    });
-    steps.forEach(function (st) {
-      st.hand = sideTone({ left: st.rect.x, width: st.rect.w }) === 'design' ? D : K;
-      st.dx = Math.abs(st.dx) * (st.hand === D ? 1 : -1); // scattered outward, toward its own hand
-      // wide elements: grip them on the working hand's half
-      var mid = window.innerWidth / 2, gx = st.rect.x + st.rect.w * st.gx, nx = gripX(st.hand === D ? 'design' : 'code', st.rect.x, st.rect.w, gx, mid);
-      if (nx !== gx && st.rect.w) st.gx = (nx - st.rect.x) / st.rect.w;
-    });
-    steps.forEach(function (st, i) {
-      var r = { left: st.rect.x, top: st.rect.y, width: st.rect.w, height: st.rect.h };
-      if (!st.fast) {
-        var slot = document.createElement('div');
-        slot.className = 'bp__slot';
-        slot.style.transform = 'translate(' + r.left + 'px,' + r.top + 'px)';
-        slot.style.width = r.width + 'px';
-        slot.style.height = r.height + 'px';
-        slot.style.transitionDelay = (i * 50) + 'ms';
-        layer.appendChild(slot);
-        st.slot = slot;
-      }
-      st.el.classList.add('is-building');
-      st.el.style.translate = st.dx + 'px ' + st.dy + 'px';
-      st.el.style.rotate = st.rot + 'deg';
-    });
-    if (stage) stage.classList.add('bp-live');
 
     function wait(ms) { return new Promise(function (res) { setTimeout(res, skipped ? 0 : ms * pace); }); }
     async function halt(ms) { await wait(ms); return skipped; }
@@ -402,10 +334,9 @@
         st.el.style.translate = ''; st.el.style.rotate = '';
         st.el.classList.remove('is-building', 'is-picked', 'is-scattered');
       });
-      layer.classList.add('is-leaving');
-      skipBtn.remove();
+      if (layer) { layer.classList.add('is-leaving'); setTimeout(function () { layer.remove(); }, 500); }
+      if (skipBtn) skipBtn.remove();
       root.classList.remove('build-on');
-      setTimeout(function () { layer.remove(); }, 500);
       ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.removeEventListener(ev, userSkip, true); });
       buildDone = true;
       document.dispatchEvent(new Event('build:done'));
@@ -423,10 +354,61 @@
       if (link && link.getAttribute('href').length > 1) startHash = link.getAttribute('href');
       finish();
     }
+
+    // Someone following a link to a section or project wants that, not the intro.
+    if (startHash.length > 1 && (/^#project\//.test(startHash) || document.getElementById(hashId(startHash)))) { setTimeout(finish, 0); return; }
+
+    // Scatter everything now, before any hand exists, so nothing is ever seen in its final place early.
+    var scale = Math.min(1, window.innerWidth / 1280);
+    steps.forEach(function (st) {
+      st.hand = sideTone(st.el.getBoundingClientRect()) === 'design' ? D : K;
+      st.dx = Math.abs(st.dx) * scale * (st.hand === D ? 1 : -1); // scattered outward, toward its own hand
+      st.dy *= scale;
+    });
+    if (stage) stage.classList.add('bp-still');
+    steps.forEach(function (st) {
+      st.el.classList.add('is-building', 'is-scattered');
+      st.el.style.translate = st.dx + 'px ' + st.dy + 'px';
+      st.el.style.rotate = st.rot + 'deg';
+    });
+    if (stage) { stage.classList.add('bp-live'); void stage.offsetWidth; stage.classList.remove('bp-still'); }
+
+    layer = document.createElement('div');
+    layer.className = 'bp is-on';
+    layer.setAttribute('aria-hidden', 'true');
+    layer.innerHTML = '<div class="bp__grid"></div>';
+    document.body.appendChild(layer);
+    skipBtn = document.createElement('button');
+    skipBtn.type = 'button';
+    skipBtn.className = 'bp__skip';
+    skipBtn.textContent = 'Skip intro';
+    document.body.appendChild(skipBtn);
     skipBtn.addEventListener('click', userSkip);
     ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, userSkip, true); });
-    // Someone following a link to a section or project wants that, not the intro.
-    if (startHash.length > 1 && (/^#project\//.test(startHash) || document.getElementById(hashId(startHash)))) finish();
+
+    // Resting places, read in one go with the scatter switched off (fonts have settled by now).
+    function measure() {
+      if (stage) stage.classList.add('bp-still', 'bp-measure');
+      steps.forEach(function (st) {
+        var r = st.el.getBoundingClientRect();
+        st.rect = { x: r.left, y: r.top, w: r.width, h: r.height };
+      });
+      if (stage) { stage.classList.remove('bp-measure'); void stage.offsetWidth; stage.classList.remove('bp-still'); }
+      steps.forEach(function (st, i) {
+        // wide elements: grip them on the working hand's half
+        var mid = window.innerWidth / 2, gx = st.rect.x + st.rect.w * st.gx, nx = gripX(st.hand, st.rect.x, st.rect.w, gx, mid);
+        if (nx !== gx && st.rect.w) st.gx = (nx - st.rect.x) / st.rect.w;
+        if (st.fast) return;
+        var slot = document.createElement('div');
+        slot.className = 'bp__slot';
+        slot.style.transform = 'translate(' + st.rect.x + 'px,' + st.rect.y + 'px)';
+        slot.style.width = st.rect.w + 'px';
+        slot.style.height = st.rect.h + 'px';
+        slot.style.transitionDelay = (i * 50) + 'ms';
+        layer.appendChild(slot);
+        st.slot = slot;
+      });
+    }
 
     // One hand works through its own list; both run at the same time.
     async function work(h, list, startX) {
@@ -460,11 +442,8 @@
       }
     }
 
-    (async function run() {
-      if (await halt(60)) return;
-      layer.classList.add('is-on');
-      steps.forEach(function (st, i) { setTimeout(function () { st.el.classList.add('is-scattered'); }, 100 + i * 35); });
-      if (await halt(400)) return;
+    async function run() {
+      if (await halt(160)) return;
       await Promise.all([
         work(hands.design, steps.filter(function (s) { return s.hand === D; }), window.innerWidth * 0.62),
         work(hands.code, steps.filter(function (s) { return s.hand === K; }), window.innerWidth * 0.3)
@@ -484,8 +463,17 @@
       }
       if (await halt(60)) return;
       finish();
-    })();
-  }); });
+    }
+
+    whenVisible(function () { whenReady(function () {
+      if (finished) return;
+      if (!(window.RealHand && window.RealHand.ready)) return finish(); // no hand, no intro: never a stand-in
+      window.scrollTo(0, 0);
+      measure();
+      hands = { design: makeHand(layer, 'Design', 'design'), code: makeHand(layer, 'Code', 'code') };
+      run();
+    }); });
+  })();
 
   // Certificates carry a "Verified" stamp; with the intro, the hands stamp each card as they place it.
   if (!building) Array.prototype.forEach.call(document.querySelectorAll('.cred'), function (c) { c.classList.add('is-stamped'); });
@@ -644,6 +632,7 @@
       if (!fresh.length) return;
       fresh.sort(function (a, b) { return a.getBoundingClientRect().top - b.getBoundingClientRect().top; });
       onBuilt(function () {
+        if (!(window.RealHand && window.RealHand.ready)) { fresh.forEach(settle); return; } // no stand-in hand here either
         ensure();
         Array.prototype.push.apply(queue, fresh);
         pump();

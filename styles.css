@@ -1167,6 +1167,7 @@ p, li, dd { text-wrap: pretty; }
 .build-on body { overflow: hidden; }
 /* Before script.js takes over, keep the hero pieces hidden so nothing jumps. */
 .build-on .stage:not(.bp-live) :is(.stage__word, #hero-title, .stage__rail, .status, .role, .lede, .hero__cta, .socials, .stage__scroll) { opacity: 0; }
+.build-on .stage:not(.bp-live) .stage__portrait { translate: 70px 40px; rotate: 3deg; }
 .stage.no-enter .stage__word span { animation: none !important; opacity: 1 !important; transform: none !important; }
 
 .is-building {
@@ -1175,8 +1176,11 @@ p, li, dd { text-wrap: pretty; }
 }
 .is-building.is-scattered { opacity: .38; filter: grayscale(.5) blur(.4px); }
 .is-building.is-picked { opacity: 1; filter: none; scale: 1.015; }
+.stage__portrait.is-building { opacity: 1; filter: none; } /* the main image: scattered, but never faded */
+.bp-still .is-building { transition: none !important; }
+.bp-measure .is-building { translate: none !important; rotate: none !important; }
 .is-waiting { opacity: 0 !important; }
-.stage.bp-live :is(.role, .lede, .hero__cta, .socials, .stage__scroll) { transition: opacity .5s ease; }
+.stage.bp-live :is(.role, .lede, .hero__cta, .socials, .stage__scroll):not(.is-building) { transition: opacity .5s ease; }
 
 .bp { position: fixed; inset: 0; z-index: 250; pointer-events: none; }
 .bp__grid {
@@ -1215,13 +1219,6 @@ p, li, dd { text-wrap: pretty; }
   position: absolute; top: 0; left: 0; width: 0; height: 0; z-index: 2;
   transition-property: transform; transition-timing-function: cubic-bezier(.45, .05, .25, 1);
 }
-.hand svg { position: absolute; left: -15px; top: -12px; width: 36px; height: 36px; overflow: visible; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .45)); transition: scale .12s ease; }
-.hand svg path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.hand .o path { stroke: #0b0d12; stroke-width: 4.4; }
-.hand .i path { stroke: #ffffff; stroke-width: 2; }
-.hand__grab { display: none; }
-.hand.is-grab .hand__open { display: none; }
-.hand.is-grab .hand__grab { display: block; scale: .92; }
 .hand__label {
   position: absolute; left: 20px; top: 22px; padding: 3px 9px; border-radius: 999px 999px 999px 4px;
   background: var(--accent-fill); color: var(--accent-ink); font: 600 11px/1.3 var(--font-body); white-space: nowrap;
