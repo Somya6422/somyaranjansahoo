@@ -2390,7 +2390,7 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
 .dl-seg:first-child { border-radius: 4px 0 0 4px; }
 .dl-seg:last-child { border-radius: 0 4px 4px 0; }
 .dl-table { margin-top: 12px; font-size: .82rem; }
-.dl-table summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+.dl-table summary { cursor: pointer; color: var(--muted); font-weight: 600; padding: 10px 0; }
 .dl-table summary:hover { color: var(--accent); }
 .dl-table table { width: 100%; margin-top: 8px; border-collapse: collapse; }
 .dl-table th, .dl-table td { padding: 4px 6px; text-align: left; border-bottom: 1px solid var(--line); }
