@@ -1166,12 +1166,6 @@ p, li, dd { text-wrap: pretty; }
 /* =========================================================
    Startup "live build": blueprint + hand cursor placing elements
    ========================================================= */
-/* Phones skip the 3D hands: the hero settles in under a second instead. */
-.intro-lite .stage :is(.stage__word, .status, .role, #hero-title, .lede, .stage__rail, .hero__cta, .socials) { animation: heroIn .45s var(--ease) both; }
-.intro-lite .stage :is(.role, #hero-title) { animation-delay: .08s; }
-.intro-lite .stage :is(.lede, .stage__rail) { animation-delay: .16s; }
-.intro-lite .stage :is(.hero__cta, .socials) { animation-delay: .24s; }
-@keyframes heroIn { from { opacity: 0; translate: 0 12px; } }
 .build-on body { overflow: hidden; }
 /* Before script.js takes over, keep the hero pieces hidden so nothing jumps. */
 .build-on .stage:not(.bp-live) :is(.stage__word, #hero-title, .stage__rail, .status, .role, .lede, .hero__cta, .socials, .stage__scroll) { opacity: 0; }
@@ -2296,8 +2290,8 @@ body { background-color: var(--page-bg, var(--bg)); transition: background-color
 
 /* The portrait (largest image) shows from the first paint; the hand only nudges it straight */
 .stage__portrait.is-building, .stage__portrait.is-building.is-scattered { opacity: 1; filter: none; }
-/* Phones: the hero never depends on a script finishing in time. .js .enter hides items until animationend,
-   and on slow connections that event fires before script.js exists, which left them hidden for good. */
+/* Phones show the finished hero at the first paint: no fade-in, and nothing depends on a script arriving in time.
+   (.js .enter hides items until animationend, which on slow connections fires before script.js exists.) */
 .intro-lite .enter, .intro-lite .stage__word span { opacity: 1; transform: none; animation: none; }
 
 /* Speed: sections below the fold aren't laid out or painted until they come near the screen */
