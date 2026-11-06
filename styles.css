@@ -2288,7 +2288,9 @@ body { background-color: var(--page-bg, var(--bg)); transition: background-color
 
 /* The portrait (largest image) shows from the first paint; the hand only nudges it straight */
 .stage__portrait.is-building, .stage__portrait.is-building.is-scattered { opacity: 1; filter: none; }
-.intro-lite .stage__portrait.enter { opacity: 1; transform: none; animation: none; }
+/* Phones: the hero never depends on a script finishing in time. .js .enter hides items until animationend,
+   and on slow connections that event fires before script.js exists, which left them hidden for good. */
+.intro-lite .enter, .intro-lite .stage__word span { opacity: 1; transform: none; animation: none; }
 
 /* Speed: sections below the fold aren't laid out or painted until they come near the screen */
 main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px; }
