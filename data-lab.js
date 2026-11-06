@@ -2,6 +2,7 @@
    Loaded only when someone scrolls near the section. The SQL engine (about 700 KB) waits for the first query. */
 (function () {
   'use strict';
+  if (!window.fetch) return; // the section's written findings stay; only the live charts and SQL need this
   var $ = function (id) { return document.getElementById(id); };
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   var nf = new Intl.NumberFormat('en-IN');
