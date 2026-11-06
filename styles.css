@@ -2361,6 +2361,7 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
 .dl-h { margin: 0 0 6px; font: 600 1.45rem/1.2 var(--font-display); }
 .dl-lede { margin: 0 0 20px; max-width: 70ch; color: var(--muted); }
 .dl-finding { margin: -8px 0 20px; padding: 10px 14px; max-width: 78ch; border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; background: var(--surface); }
+.dl-finding--rec { margin-top: -12px; border-left-color: #14b8a6; }
 .dl-shot { display: block; max-width: 760px; overflow: hidden; border-radius: 14px; border: 1px solid var(--line); cursor: zoom-in; }
 .dl-shot img { display: block; width: 100%; height: auto; }
 .dl-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0 0 18px; }
