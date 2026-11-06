@@ -482,8 +482,9 @@
     }); });
   })();
 
-  // Certificates carry a "Verified" stamp; with the intro, the hands stamp each card as they place it.
-  if (!building) Array.prototype.forEach.call(document.querySelectorAll('.cred'), function (c) { c.classList.add('is-stamped'); });
+  // The "Verified" stamp only goes on certificates a visitor can check for themselves; with the intro, the hands stamp each as they place it.
+  function canVerify(c) { return !!c.querySelector('a[href*="coursera.org"]'); }
+  if (!building) Array.prototype.forEach.call(document.querySelectorAll('.cred'), function (c) { if (canVerify(c)) c.classList.add('is-stamped'); });
 
   // A layer for one-off hands (resume hand-off), above the page, never catching clicks.
   var fxLayer = null;
@@ -560,7 +561,7 @@
 
     function settle(el) {
       el._placed = true;
-      if (el.classList.contains('cred')) el.classList.add('is-stamped');
+      if (el.classList.contains('cred') && canVerify(el)) el.classList.add('is-stamped');
       if (!el.classList.contains('hand-wait')) return;
       el.style.translate = ''; el.style.rotate = '';
       el.classList.remove('hand-wait');
@@ -606,7 +607,7 @@
       h.grip(false);
       el.classList.remove('hand-held');
       h.sel.classList.add('is-drop'); sfx('drop');
-      if (el.classList.contains('cred') && h.press) {
+      if (el.classList.contains('cred') && canVerify(el) && h.press) {
         await sleep(60);
         h.press();
         el.classList.add('is-stamped', 'stamp-anim');
