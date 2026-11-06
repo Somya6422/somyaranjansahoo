@@ -48,10 +48,11 @@
 
   // ---- Device-aware experience: phone / tablet / desktop ----
   function detectDevice() {
-    var w = window.innerWidth;
-    if (w <= 760) return 'phone';
-    if (w <= 1100) return 'tablet';
-    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches && w <= 1366) return 'tablet';
+    // Media queries, because reading innerWidth this early forces a full layout.
+    function mq(q) { return window.matchMedia(q).matches; }
+    if (mq('(max-width: 760px)')) return 'phone';
+    if (mq('(max-width: 1100px)')) return 'tablet';
+    if (mq('(hover: none) and (pointer: coarse)') && mq('(max-width: 1366px)')) return 'tablet';
     return 'desktop';
   }
   function applyDevice() {
@@ -148,7 +149,13 @@
       });
     }
     window.addEventListener('scroll', function () { if (!tlTick) { tlTick = true; requestAnimationFrame(fillTimelines); } }, { passive: true });
-    fillTimelines();
+    // First fill waits until a timeline is on screen, so startup never lays out those sections.
+    if ('IntersectionObserver' in window) {
+      var tlSeen = new IntersectionObserver(function (entries) {
+        if (entries.some(function (e) { return e.isIntersecting; })) fillTimelines();
+      });
+      timelines.forEach(function (tl) { tlSeen.observe(tl); });
+    } else fillTimelines();
   }
 
   // ---- Desktop: spotlight that follows the cursor, magnetic primary buttons ----
@@ -693,9 +700,10 @@
       }
     }
     row.addEventListener('scroll', sync, { passive: true });
-    if ('ResizeObserver' in window) new ResizeObserver(sync).observe(row);
     new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-device'] });
-    sync();
+    // ResizeObserver also fires once the row is first laid out, so startup doesn't have to measure it.
+    if ('ResizeObserver' in window) { if (ui) ui.hidden = true; new ResizeObserver(sync).observe(row); }
+    else sync();
   }
   [['.cards', 'more projects', true], ['.medals', 'awards and badges', true], ['#filters', 'project filters', false], ['#credFilters', 'certificate filters', false]].forEach(function (d) {
     var row = document.querySelector(d[0]);
@@ -811,7 +819,7 @@
     if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
   }, { passive: true });
   window.addEventListener('resize', onScroll);
-  onScroll();
+  requestAnimationFrame(onScroll);
   if (toTop) toTop.addEventListener('click', scrollToTop);
 
   // ---- Highlight the nav link for the section in view ----
