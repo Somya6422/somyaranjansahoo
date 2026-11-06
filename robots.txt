@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://somya6422.github.io/somyaranjansahoo/sitemap.xml
+Sitemap: https://somyaranjansahoo6422.github.io/sitemap.xml
