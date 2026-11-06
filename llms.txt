@@ -1,0 +1,29 @@
+# Somya Ranjan Sahoo
+
+> Portfolio of Somya Ranjan Sahoo (Sonu), an aspiring data analyst and software developer from Bhubaneswar, Odisha, India. He is a B.Tech Computer Science and Engineering student at GITA Autonomous College, working with Python, SQL, Excel and Node.js, and is open to internships and hackathon teams.
+
+The whole portfolio is one page, https://somyaranjansahoo6422.github.io/, and the links below go to its sections.
+
+## Portfolio
+
+- [Data lab](https://somyaranjansahoo6422.github.io/#data): Analysis of a registry of 2,003 Indian toll plazas, an Excel dashboard and a live SQL database that visitors can query.
+- [Projects](https://somyaranjansahoo6422.github.io/#work): Case studies of the projects listed below, with screenshots and results.
+- [About](https://somyaranjansahoo6422.github.io/#about): Background, including seven years at Sainik School Bhubaneswar, NCC training and the ASTRA-X hackathon team.
+- [Experience](https://somyaranjansahoo6422.github.io/#experience): Back-End / Python Developer Intern at The Entrepreneurship Network, May to August 2026.
+- [Credentials](https://somyaranjansahoo6422.github.io/#credentials): Certificates and awards, including Best Innovation Team at CHAKRAVYUH 1.0 and national hackathon finalist at India Innovates 2026.
+- [Resume](https://somyaranjansahoo6422.github.io/#resume): One-page resume to read or download.
+- [Contact](https://somyaranjansahoo6422.github.io/#contact): Contact form and links.
+
+## Projects
+
+- [India Toll Network Analysis](https://github.com/somyaranjansahoo6422/india-toll-network-analysis): Data analysis of India's toll plazas: where they are, who runs them and whether the data can be trusted.
+- [Smart Toll Plaza Management and GIS Command Center](https://github.com/somyaranjansahoo6422/smart-toll-plaza-system): A toll operations prototype with live number-plate recognition and a Pan-India plaza map.
+- [VANTAGE: ZERO](https://github.com/somyaranjansahoo6422/Game-using-Wispr-Flow): A voice-controlled 3D combat flight game that runs in the browser.
+- [GOD VIEW](https://github.com/somyaranjansahoo6422/GOD-VIEW): An open-source-intelligence digital twin with live flights and satellites on a 3D globe, linked in a knowledge graph.
+- [UNSPOKEN](https://github.com/somyaranjansahoo6422/unspoken): A chest-mounted wearable that helps visually impaired users sense obstacles and lets non-verbal users speak through gestures.
+- [Student Attendance Management System](https://github.com/somyaranjansahoo6422/Student_Attendance_Management_System): A multi-role desktop app where students check in by scanning a QR code.
+
+## Profiles
+
+- [GitHub](https://github.com/somyaranjansahoo6422)
+- [LinkedIn](https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/)
