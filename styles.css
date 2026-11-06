@@ -1020,6 +1020,7 @@ p, li, dd { text-wrap: pretty; }
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
 .stage__tag .mono { color: var(--accent); margin-right: 6px; }
+@media (max-width: 1100px) { .stage__tag { width: auto; left: 8px; right: 8px; transform: none; max-width: none; } .stage__tag * { min-width: 0; white-space: normal; } }
 
 .stage__rail { margin: 0; display: grid; gap: 14px; align-self: center; padding-top: calc(var(--word) * .5); }
 .stage__rail > div { padding: 2px 0 2px 16px; border-left: 2px solid var(--line-strong); transition: border-color .3s ease; }
