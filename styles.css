@@ -2020,7 +2020,13 @@ body { background-color: var(--page-bg, var(--bg)); transition: background-color
 .word blockquote { position: relative; padding-top: 34px; }
 .word blockquote::before { content: ""; position: absolute; left: 0; top: 0; width: 46px; height: 6px; border-radius: 6px; background: linear-gradient(90deg, var(--accent-fill), var(--accent-2)); }
 
-@media (max-width: 560px) { .journey__pin[data-city="kgp"] { --x: 72%; --y: 38%; } }
+/* Phones move the Kharagpur pin clear of Bhubaneswar, so its path has to end at the new spot too */
+.journey__arc--kgp-phone { display: none; }
+@media (max-width: 560px) {
+  .journey__pin[data-city="kgp"] { --x: 72%; --y: 38%; }
+  .journey__arc--kgp { display: none; }
+  .journey__arc--kgp-phone { display: inline; }
+}
 
 /* Performance pass: no blur filters on moving pieces, compositor-friendly pulses, promoted glow layers */
 .is-building.is-scattered { filter: none; }
