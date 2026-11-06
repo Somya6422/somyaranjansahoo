@@ -72,13 +72,14 @@
     tabbar.querySelectorAll('a[data-tab]').forEach(function (a) { tabs[a.getAttribute('data-tab')] = a; });
     var tabSpy = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        if (!en.isIntersecting || !tabs[en.target.id]) return;
+        if (!en.isIntersecting) return;
         Object.keys(tabs).forEach(function (k) { tabs[k].classList.remove('active'); tabs[k].removeAttribute('aria-current'); });
+        if (!tabs[en.target.id]) return; // back in the hero: no tab is lit
         tabs[en.target.id].classList.add('active');
         tabs[en.target.id].setAttribute('aria-current', 'true');
       });
     }, { rootMargin: '-40% 0px -55% 0px' });
-    Object.keys(tabs).forEach(function (id) { var sec = $(id); if (sec) tabSpy.observe(sec); });
+    Object.keys(tabs).concat('home').forEach(function (id) { var sec = $(id); if (sec) tabSpy.observe(sec); });
   }
 
   // ---- Work: cards / index view ----
