@@ -998,6 +998,7 @@ p, li, dd { text-wrap: pretty; }
 .stage__name { display: block; font: 700 clamp(2.2rem, 4.3vw, 3.7rem)/1 var(--font-display); letter-spacing: -0.04em; text-transform: uppercase; }
 .stage h1 .line.grad { display: block; margin-top: 12px; font-size: clamp(1.35rem, 2.5vw, 2.1rem); letter-spacing: -0.02em; }
 .stage .role { margin: 0 0 14px; }
+@media (max-width: 480px) { .stage .role { font-size: clamp(.68rem, 3.45vw, .9rem); letter-spacing: 0; } }
 .stage .lede { font-size: 1.02rem; max-width: 54ch; }
 .stage .hero__cta { margin: 24px 0 20px; }
 
@@ -1955,7 +1956,7 @@ body.deep-open { overflow: hidden; }
 .word figcaption { display: grid; gap: 2px; margin-top: 18px; }
 .word figcaption strong { font-family: var(--font-display); }
 .word figcaption span { font-size: .86rem; color: var(--muted); }
-.words__nav { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+.words__nav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 16px; }
 .words__nav[hidden] { display: none; }
 .words__dots { display: flex; gap: 8px; }
 .words__dots button { width: 28px; height: 28px; border: 0; padding: 0; background: none; cursor: pointer; display: grid; place-items: center; }
