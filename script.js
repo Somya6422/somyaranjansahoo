@@ -79,7 +79,9 @@
         tabs[en.target.id].setAttribute('aria-current', 'true');
       });
     }, { rootMargin: '-40% 0px -55% 0px' });
-    Object.keys(tabs).concat('home').forEach(function (id) { var sec = $(id); if (sec) tabSpy.observe(sec); });
+    Object.keys(tabs).forEach(function (id) { var sec = $(id); if (sec) tabSpy.observe(sec); });
+    var heroSec = document.querySelector('.stage');
+    if (heroSec) tabSpy.observe(heroSec);
   }
 
   // ---- Work: cards / index view ----
