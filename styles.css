@@ -1,5 +1,7 @@
 /* Fonts live on this site, trimmed to the characters and weights it uses (SIL Open Font License, see assets/fonts/LICENSE.txt) */
 @font-face { font-family: "Anton"; src: url("assets/fonts/anton.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+/* If Anton is late or missing, a plain font sized to Anton's width keeps PORTFOLIO on the screen */
+@font-face { font-family: "Poster Fallback"; src: local("Roboto"), local("Roboto-Regular"), local("Arial"), local("Helvetica"); size-adjust: 66%; }
 @font-face { font-family: "Caveat"; src: url("assets/fonts/caveat.woff2") format("woff2"); font-weight: 600; font-display: swap; }
 @font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk.woff2") format("woff2"); font-weight: 500 700; font-display: swap; }
 @font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk-ext.woff2") format("woff2"); font-weight: 500 700; font-display: swap; unicode-range: U+20B9; }
@@ -1076,7 +1078,7 @@ p, li, dd { text-wrap: pretty; }
 }
 
 /* Stage hero, reference styling: condensed display type, script greeting, solid accent word */
-.stage { --word: clamp(5.4rem, 22vw, 20rem); --font-poster: "Anton", "Impact", "Arial Narrow", sans-serif; }
+.stage { --word: clamp(5.4rem, 22vw, 20rem); --font-poster: "Anton", "Impact", "Poster Fallback", sans-serif; }
 .stage__word { font-family: var(--font-poster); font-weight: 400; letter-spacing: -0.005em; line-height: .86; top: 12px; }
 .stage__word span { background: linear-gradient(180deg, var(--accent-fill) 35%, var(--accent-fill-2) 100%); -webkit-background-clip: text; background-clip: text; }
 .stage__text { padding-top: calc(var(--word) * .86 + 34px); }
@@ -1250,7 +1252,7 @@ p, li, dd { text-wrap: pretty; }
    Page-wide upgrade: poster headings, ticker, badges,
    all-certificates grid, two hands
    ========================================================= */
-:root { --font-poster: "Anton", "Impact", "Arial Narrow", sans-serif; --gold: #b45309; --gold-bg: rgba(202, 138, 4, .14); }
+:root { --font-poster: "Anton", "Impact", "Poster Fallback", sans-serif; --gold: #b45309; --gold-bg: rgba(202, 138, 4, .14); }
 :root[data-theme="dark"] { --gold: #fbbf24; --gold-bg: rgba(251, 191, 36, .14); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --gold: #fbbf24; --gold-bg: rgba(251, 191, 36, .14); } }
 
