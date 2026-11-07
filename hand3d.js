@@ -116,7 +116,7 @@
     // the shadow is a CSS drop-shadow on the whole rig: re-drawn only when the fingers change, not every frame
     var rg = document.createElement('div'); rg.className = 'rh__rig';
     rg.style.width = rig.size[0] + 'px'; rg.style.height = rig.size[1] + 'px'; rg.style.perspectiveOrigin = C[0] + 'px ' + C[1] + 'px';
-    var lab = document.createElement('span'); lab.className = 'hand__label'; lab.textContent = label || '';
+    var lab = document.createElement('span'); lab.className = 'hand__label'; lab.setAttribute('data-t', label || '');
     var els = {}, bks = {};
     ORDER.forEach(function (id) {
       bks[id] = partEl(rig, BACK[id], 'rh__b', PALM[key], rig.palmAtlas); rg.appendChild(bks[id]);

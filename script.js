@@ -253,7 +253,8 @@
       sel.style.transform = 'translate(' + x + 'px,' + y + 'px)';
       sel.style.width = w + 'px'; sel.style.height = h + 'px';
     };
-    var labelFn = function (tag, w, h) { sel.querySelector('.bp__tag').textContent = tag; sel.querySelector('.bp__size').textContent = Math.round(w) + ' × ' + Math.round(h); };
+    // The labels draw their text from CSS: it looks the same, and a passing animation is never read as page text.
+    var labelFn = function (tag, w, h) { sel.querySelector('.bp__tag').setAttribute('data-t', tag); sel.querySelector('.bp__size').setAttribute('data-t', Math.round(w) + ' × ' + Math.round(h)); };
     layer.appendChild(sel);
     var rh = window.RealHand.create(layer, label, tone);
     return { el: rh.el, sel: sel, move: rh.move, follow: rh.follow, tap: rh.tap, pose: rh.pose, grip: rh.grip, press: rh.press, wave: rh.wave, box: boxFn, label: labelFn };

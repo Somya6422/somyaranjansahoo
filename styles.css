@@ -2479,3 +2479,6 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
   #toll-dashboard > .dl-links { grid-row: 5; }
   #toll-dashboard > .dl-shot { grid-column: 2; grid-row: 1 / -1; margin: 0; }
 }
+
+/* Intro labels show their text through CSS (see labelFn in script.js) */
+.bp__tag::before, .bp__size::before, .hand__label::before { content: attr(data-t); }
