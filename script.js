@@ -296,6 +296,18 @@
       }, ms);
     });
   }
+  // A direct link (#contact, #credentials): sections not rendered yet only have estimated heights, so the browser's
+  // own jump lands in the wrong place. Land again once the page has loaded, until it settles.
+  (function () {
+    var hash = location.hash;
+    if (!hash || /^#project\//.test(hash)) return;
+    function land() {
+      var el = null;
+      try { el = document.querySelector(hash); } catch (e) {}
+      if (el && el.closest('main')) landOn(el);
+    }
+    if (document.readyState === 'complete') land(); else window.addEventListener('load', land, { once: true });
+  })();
   var pace = 1;
   if (building) { try { if (sessionStorage.getItem('intro:seen') === '1') pace = 0.32; sessionStorage.setItem('intro:seen', '1'); } catch (e) {} }
   if (building) (function () {
@@ -673,7 +685,7 @@
       // The hands need the full stylesheet, which phones load alongside the page.
       var sheet = $('css');
       var styled = new Promise(function (done) {
-        if (!sheet || sheet.media === 'all') return done();
+        if (!sheet || root.classList.contains('css-ready')) return done();
         sheet.addEventListener('load', function () { done(); }, { once: true });
       });
       Promise.all([loadHands(), styled]).then(function (got) {
