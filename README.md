@@ -75,4 +75,14 @@ The MIT license in this repository covers the code only. Photos, certificates, r
 
 ## Publishing a change
 
-After editing `styles.css` or `script.js`, run `node stamp-assets.js` before committing. It updates the version on those two files in every page, so visitors never get a new page with an old cached file.
+The pages load minified files, so after editing any `.css` or `.js` file run:
+
+```bash
+node build.js
+```
+
+It rebuilds the `.min` files, versions them so visitors never get a new page with an old cached file, and refreshes the Content-Security-Policy hashes. It needs [esbuild](https://esbuild.github.io).
+
+If the top of the page changes, regenerate its inline CSS first with `node tools/make-critical.js http://localhost:4321/`.
+
+Phones paint from that inline CSS while the full stylesheet loads alongside. `sw.js` keeps files on the device so repeat visits are fast; pages always come fresh from the network.
