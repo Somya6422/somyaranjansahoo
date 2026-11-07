@@ -2478,3 +2478,6 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
   #toll-dashboard > .dl-links { grid-row: 5; }
   #toll-dashboard > .dl-shot { grid-column: 2; grid-row: 1 / -1; margin: 0; }
 }
+
+/* The inline first-screen CSS keeps everything below the hero hidden until this file has arrived */
+main > :not(.stage), body > footer { visibility: visible; }

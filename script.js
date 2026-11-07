@@ -670,7 +670,14 @@
     function bringHands() {
       if (asked) return;
       asked = true;
-      loadHands().then(function (RH) {
+      // The hands need the full stylesheet, which phones load alongside the page.
+      var sheet = $('css');
+      var styled = new Promise(function (done) {
+        if (!sheet || sheet.media === 'all') return done();
+        sheet.addEventListener('load', function () { done(); }, { once: true });
+      });
+      Promise.all([loadHands(), styled]).then(function (got) {
+        var RH = got[0];
         if (!RH || !RH.ready) return;
         Array.prototype.forEach.call(document.querySelectorAll('.reveal'), function (e) { e.classList.remove('reveal', 'in'); });
         sectionHands(true);
@@ -680,6 +687,15 @@
       window.addEventListener(ev, bringHands, { once: true, passive: true });
     });
   })();
+
+  // ---- Repeat visits: keep the site's files on the device, set up once someone starts using the page ----
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    var keepFiles = function () {
+      ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (ev) { window.removeEventListener(ev, keepFiles); });
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    };
+    ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (ev) { window.addEventListener(ev, keepFiles, { passive: true }); });
+  }
 
   // ---- Horizontal rows: drag with a mouse, plus a visible bar and arrow buttons ----
   function enhanceScroller(row, label, withBar) {
