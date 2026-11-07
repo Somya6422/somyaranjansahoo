@@ -877,10 +877,12 @@
     if (toTop) toTop.classList.toggle('show', y >= window.innerHeight);
     ticking = false;
   }
-  window.addEventListener('scroll', function () {
+  // Reads the page height inside an animation frame, so the browser never has to work out the layout twice.
+  var queueScroll = function () {
     if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
-  }, { passive: true });
-  window.addEventListener('resize', onScroll);
+  };
+  window.addEventListener('scroll', queueScroll, { passive: true });
+  window.addEventListener('resize', queueScroll);
   requestAnimationFrame(onScroll);
   if (toTop) toTop.addEventListener('click', scrollToTop);
 
