@@ -430,6 +430,7 @@ a.thumb, a.card__img, a.case__media, .study__gallery a { cursor: zoom-in; }
 .filter:hover { border-color: var(--accent); color: var(--accent); }
 .filter[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
 .filter__n { font: 500 .74rem/1 var(--font-mono); opacity: .75; }
+.filter[aria-pressed="true"] .filter__n { opacity: 1; }
 .filter__n:empty { display: none; }
 
 .group-title { font: 600 .8rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 14px; }
@@ -2478,6 +2479,3 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
   #toll-dashboard > .dl-links { grid-row: 5; }
   #toll-dashboard > .dl-shot { grid-column: 2; grid-row: 1 / -1; margin: 0; }
 }
-
-/* The inline first-screen CSS keeps everything below the hero hidden until this file has arrived */
-main > :not(.stage), body > footer { visibility: visible; }
