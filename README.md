@@ -29,6 +29,20 @@ I turn messy data into clear answers, and I build things that work.
 | **Ask me anything** | A small chat that answers questions about my work |
 | **Contact** | A form that reaches my inbox |
 
+## Projects
+
+Each project has its own page with the full case study, screenshots and links.
+
+| Project | What it is |
+|---|---|
+| [India Toll Network Analysis](https://somyaranjansahoo6422.github.io/projects/india-toll-network-analysis/) | Data analysis of 2,003 Indian toll plazas with Python, SQL and Excel |
+| [Smart Toll Plaza System](https://somyaranjansahoo6422.github.io/projects/smart-toll-plaza/) | Toll operations prototype with live number-plate recognition and a Pan-India map |
+| [VANTAGE: ZERO](https://somyaranjansahoo6422.github.io/projects/vantage-zero/) | A voice-controlled 3D combat flight game that runs in the browser |
+| [GOD VIEW](https://somyaranjansahoo6422.github.io/projects/god-view/) | An open-source-intelligence digital twin with live flights and satellites on a 3D globe |
+| [UNSPOKEN](https://somyaranjansahoo6422.github.io/projects/unspoken/) | A wearable that helps visually impaired users sense obstacles and lets non-verbal users speak |
+| [ANUMATI](https://somyaranjansahoo6422.github.io/projects/anumati/) | A regulatory-clearance engine that models business licences as a dependency graph |
+| [Student Attendance System](https://somyaranjansahoo6422.github.io/projects/student-attendance-system/) | A desktop app where students check in by scanning a QR code |
+
 ## Website analytics
 
 Measured with Google PageSpeed Insights on 7 November 2026. Google tests mobile on a simulated budget phone over slow 4G.

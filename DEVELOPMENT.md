@@ -24,6 +24,17 @@ If the top of the page changes, regenerate its inline CSS first with `node tools
 
 Phones paint from that inline CSS while the full stylesheet loads alongside. `sw.js` keeps files on the device so repeat visits are fast; pages always come fresh from the network.
 
+## Project pages
+
+Each page in `projects/<slug>/` is generated from the case studies on the homepage, which stay the single source. After editing a case study, run:
+
+```bash
+node tools/make-projects.js
+node build.js
+```
+
+To add a project, add it to the list at the top of `tools/make-projects.js`, then to `sitemap.xml` and `llms.txt`.
+
 ## Hosting (GitHub Pages)
 
 The site deploys from the `main` branch, root folder. Every push to `main` updates it, and the repository must stay public on a free GitHub plan.
