@@ -44,9 +44,9 @@ function extract(ids) {
         desc,
         chips: [...c.querySelectorAll('.case__body > .chips li')].map(text),
         badge: text(media && media.querySelector('.badge')),
-        image: img && { src: img.getAttribute('src'), big: media.getAttribute('href'), alt: img.getAttribute('alt'), w: img.getAttribute('width'), h: img.getAttribute('height') },
+        image: img && { srcset: img.getAttribute('srcset') || '', src: img.getAttribute('src'), big: media.getAttribute('href'), alt: img.getAttribute('alt'), w: img.getAttribute('width'), h: img.getAttribute('height') },
         study: [...c.querySelectorAll('.study__grid > div')].map((d) => ({ dt: text(d.querySelector('dt')), dd: d.querySelector('dd').innerHTML.trim() })),
-        gallery: [...c.querySelectorAll('.study__gallery a')].map((a) => { const i = a.querySelector('img'); return { big: a.getAttribute('href'), src: i.getAttribute('src'), alt: i.getAttribute('alt'), caption: a.getAttribute('data-caption') || '', w: i.getAttribute('width'), h: i.getAttribute('height') }; }),
+        gallery: [...c.querySelectorAll('.study__gallery a')].map((a) => { const i = a.querySelector('img'); return { srcset: i.getAttribute('srcset') || '', big: a.getAttribute('href'), src: i.getAttribute('src'), alt: i.getAttribute('alt'), caption: a.getAttribute('data-caption') || '', w: i.getAttribute('width'), h: i.getAttribute('height') }; }),
         links: [...c.querySelectorAll('.case__links a')].filter((a) => !a.getAttribute('href').startsWith('/projects/')).map((a) => ({ href: a.getAttribute('href'), label: text(a), play: a.hasAttribute('data-play'), caption: a.getAttribute('data-caption') || '' })),
         loop: media && media.getAttribute('data-video'),
       };
@@ -61,7 +61,7 @@ function extract(ids) {
         stats: [...c.querySelectorAll('.dl-stats > div')].map((d) => ({ dt: text(d.querySelector('dt')), dd: text(d.querySelector('dd')) })),
         lists: [...c.querySelectorAll('h4')].map((h) => ({ h: text(h), ul: h.nextElementSibling.innerHTML.trim() })),
         links: [...c.querySelectorAll('.dl-links a')].filter((a) => !a.getAttribute('href').startsWith('/projects/')).map((a) => ({ href: a.getAttribute('href'), label: text(a) })),
-        dash: { lede: dash.querySelector('.dl-lede').innerHTML.trim(), finding: dash.querySelector('.dl-finding').innerHTML.trim(), img: { src: shot.getAttribute('src'), big: dash.querySelector('.dl-shot').getAttribute('href'), alt: shot.getAttribute('alt'), w: shot.getAttribute('width'), h: shot.getAttribute('height') }, link: [...dash.querySelectorAll('.dl-links a')].map((a) => ({ href: a.getAttribute('href'), label: text(a) })) },
+        dash: { lede: dash.querySelector('.dl-lede').innerHTML.trim(), finding: dash.querySelector('.dl-finding').innerHTML.trim(), img: { srcset: shot.getAttribute('srcset') || '', src: shot.getAttribute('src'), big: dash.querySelector('.dl-shot').getAttribute('href'), alt: shot.getAttribute('alt'), w: shot.getAttribute('width'), h: shot.getAttribute('height') }, link: [...dash.querySelectorAll('.dl-links a')].map((a) => ({ href: a.getAttribute('href'), label: text(a) })) },
       };
     }
   }
@@ -97,7 +97,13 @@ function page(p, d, all, shell) {
       },
     ],
   };
-  const img = (i, extra) => `<img src="${abs(i.src)}" alt="${esc(i.alt || '')}" width="${i.w}" height="${i.h}"${extra || ''}>`;
+  const widest = (i) => Math.max(0, ...(i.srcset || '').split(',').map((s) => parseInt((s.trim().split(/\s+/)[1] || '0'), 10) || 0));
+  const img = (i, extra, sizes) => {
+    const set = (i.srcset || '').split(',').map((s) => s.trim()).filter(Boolean).map((s) => { const [u, w] = s.split(/\s+/); return abs(u) + ' ' + w; }).join(', ');
+    const max = widest(i);
+    const sz = sizes || (max ? `(max-width: ${max + 32}px) calc(100vw - 32px), ${max}px` : '');
+    return `<img src="${abs(i.src)}"${set ? ` srcset="${set}" sizes="${sz}"` : ''} alt="${esc(i.alt || '')}" width="${i.w}" height="${i.h}"${extra || ''}>`;
+  };
   const linkBtn = (l, first) => {
     const ext = /^https?:/.test(l.href);
     return `<a class="btn ${first ? 'btn--primary' : 'btn--ghost'} btn--sm" href="${esc(abs(l.href))}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(l.label.replace(/\s*↗$/, ''))}${ext ? ' ↗' : ''}</a>`;
@@ -113,7 +119,7 @@ function page(p, d, all, shell) {
       ${d.badge ? `<p class="proj__badge"><span class="badge">${esc(d.badge)}</span></p>` : ''}
       <ul class="chips chips--sm proj__chips" aria-label="Technologies">${d.chips.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
       ${actions.length ? `<p class="proj__actions">${actions.map((l, i) => linkBtn(l, i === 0)).join(' ')}</p>` : ''}
-      <figure class="proj__media">${img(d.image, ' fetchpriority="high"')}</figure>
+      <figure class="proj__media proj__media--fit">${img(d.image, ' fetchpriority="high"')}</figure>
       <div class="proj__grid">
         ${d.study.map((s) => `<section class="proj__block"><h2>${esc(s.dt)}</h2><p>${fixHtml(s.dd)}</p></section>`).join('\n        ')}
       </div>`;
@@ -123,7 +129,7 @@ function page(p, d, all, shell) {
     if (d.gallery.length) body += `
       <h2 class="proj__h2">Screenshots</h2>
       <div class="proj__gallery">
-        ${d.gallery.map((g) => `<figure><a href="${abs(g.big)}">${img(g, ' loading="lazy" decoding="async"')}</a><figcaption>${esc(g.caption)}</figcaption></figure>`).join('\n        ')}
+        ${d.gallery.map((g) => `<figure><a href="${abs(g.big)}">${img(g, ' loading="lazy" decoding="async"', '(max-width: 760px) calc(100vw - 32px), 380px')}</a><figcaption>${esc(g.caption)}</figcaption></figure>`).join('\n        ')}
       </div>`;
   } else {
     body += `<p class="proj__kicker mono">Data analysis · Solo project</p>
@@ -138,7 +144,7 @@ function page(p, d, all, shell) {
       <h2 class="proj__h2">The same data as an Excel dashboard</h2>
       <p class="proj__desc">${fixHtml(d.dash.lede)}</p>
       <p class="dl-finding">${fixHtml(d.dash.finding)}</p>
-      <figure class="proj__media"><a href="${abs(d.dash.img.big)}">${img(d.dash.img, ' loading="lazy" decoding="async"')}</a></figure>
+      <figure class="proj__media proj__media--fit"><a href="${abs(d.dash.img.big)}">${img(d.dash.img, ' loading="lazy" decoding="async"')}</a></figure>
       <p class="proj__actions">${d.dash.link.map((l, i) => linkBtn(l, i === 0)).join(' ')} <a class="btn btn--ghost btn--sm" href="/#data">See the charts and live SQL database</a></p>`;
   }
   const others = PAGES.filter((o) => o.slug !== p.slug).map((o) => `<li><a href="/projects/${o.slug}/"><strong>${esc(all[o.id].name)}</strong><span>${esc(all[o.id].kind === 'case' ? all[o.id].purpose : 'Data analysis of 2,003 Indian toll plazas with Python, SQL and Excel.')}</span></a></li>`).join('\n          ');

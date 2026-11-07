@@ -2521,3 +2521,5 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
 @media (max-width: 760px) { .proj { padding-top: 88px; } }
 .proj__block ul { list-style: disc; }
 .proj__block li + li { margin-top: 6px; }
+.proj__media--fit { width: fit-content; max-width: 100%; margin-inline: auto; }
+.proj__media--fit img { width: auto; max-width: 100%; }
