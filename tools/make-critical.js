@@ -87,8 +87,9 @@ function matchInPage(list) {
   };
   const body = render(tree);
   const animations = Object.keys(frames).filter((k) => used.has(k)).map((k) => frames[k]).join('\n');
-  // Everything below the hero waits for the full stylesheet, which ends by showing it again.
-  const guard = 'main > :not(.stage), body > footer { visibility: hidden; }';
+  // Everything below the hero stays out of the layout until the full stylesheet is in, so it is laid out once, not twice,
+  // and its lazy images don't load early. .intro-lite only exists with JavaScript on, so this can never hide the page for good.
+  const guard = '.intro-lite:not(.css-ready) main > :not(.stage), .intro-lite:not(.css-ready) body > footer { display: none; }';
   const out = `${faces.join('\n')}\n@media (max-width: 760px) {\n${body}\n${animations}\n${guard}\n}\n`;
   fs.writeFileSync('critical.css', out);
   console.log('critical.css', out.length, 'bytes');
