@@ -2495,7 +2495,7 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
 .proj__chips { margin: 6px 0 4px; }
 .proj__actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0; }
 .proj__media { margin: 26px 0; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
-.proj__media img, .proj__media video { display: block; width: 100%; height: auto; }
+.proj__media:not(.proj__media--fit) img, .proj__media video { display: block; width: 100%; height: auto; }
 .proj__media figcaption, .proj__gallery figcaption { padding: 8px 12px; font-size: .84rem; color: var(--muted); }
 .proj__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; margin: 24px 0; }
 .proj__grid > .dl-finding { margin: 0; }
@@ -2521,5 +2521,6 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
 @media (max-width: 760px) { .proj { padding-top: 88px; } }
 .proj__block ul { list-style: disc; }
 .proj__block li + li { margin-top: 6px; }
+/* Sized from the image's own width and height attributes, so its space is held before it loads and it is never stretched */
 .proj__media--fit { width: fit-content; max-width: 100%; margin-inline: auto; }
-.proj__media--fit img { width: auto; max-width: 100%; }
+.proj__media--fit img { display: block; max-width: 100%; height: auto; }
