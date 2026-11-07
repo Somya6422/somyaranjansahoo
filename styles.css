@@ -2443,3 +2443,23 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
 .dl-seg--3 { color: #0b0d12; }
 :root:not([data-theme="dark"]) .gh__live { color: #166534; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .gh__live { color: var(--ok); } }
+
+/* Full rows: grids end evenly, with no empty space beside the last row */
+@media (min-width: 1000px) { .best5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+@media (min-width: 761px) and (max-width: 999px) {
+  .best5 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .best5 > li { grid-column: span 2; }
+  .best5 > li:nth-child(n + 4) { grid-column: span 3; }
+}
+@media (min-width: 761px) and (max-width: 1099px) { .medals { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .medals { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+/* Three across fits the 6 shown and all 30 exactly; a filter's short last row sits in the middle */
+@media (min-width: 761px) {
+  .creds { display: flex; flex-wrap: wrap; justify-content: center; }
+  .creds > .cred { flex: 0 1 calc((100% - 36px) / 3); min-width: 0; }
+}
+@media (max-width: 1100px) {
+  .cred-feature { grid-template-columns: 1fr; }
+  .cred-feature__img { border-right: 0; border-bottom: 1px solid var(--line); }
+  .cred-feature__img img { max-width: 460px; }
+}
