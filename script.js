@@ -2148,10 +2148,15 @@
   // ---- Data lab: charts and the SQL playground load only when someone gets near them ----
   var dataSec = $('data');
   if (dataSec) {
-    var loadLab = function () { var sc = document.createElement('script'); sc.src = 'data-lab.js'; document.head.appendChild(sc); };
+    var labAsked = false;
+    var loadLab = function () { if (labAsked) return; labAsked = true; var sc = document.createElement('script'); sc.src = 'data-lab.js'; document.head.appendChild(sc); };
     if ('IntersectionObserver' in window) {
       var labIo = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { labIo.disconnect(); loadLab(); } }, { rootMargin: '900px 0px' });
       labIo.observe(dataSec);
+      // Phones keep the section out of the layout until the stylesheet is in, and the observer can miss it appearing:
+      // once the page has loaded, the lab loads anyway (it is small).
+      var labLater = function () { setTimeout(function () { labIo.disconnect(); loadLab(); }, 300); };
+      if (document.readyState === 'complete') labLater(); else window.addEventListener('load', labLater, { once: true });
     } else loadLab();
   }
 
