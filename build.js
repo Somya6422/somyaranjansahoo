@@ -51,6 +51,8 @@ for (const page of pages) {
   if (page === 'index.html') {
     html = html.replace(/(<style id="critical">)[\s\S]*?(<\/style>)/, (m, a, b) => a + critical + b);
     html = html.replace(/style-src 'self'( 'sha256-[^']+')?/, `style-src 'self' 'sha256-${sha(critical)}'`);
+    // Wider screens preload the hand script from the head; it must be the exact versioned file script.js loads, or it downloads twice.
+    html = html.replace(/\['hand3d(?:\.min)?\.js(?:\?v=[0-9a-f]+)?','script'\]/, `['${lazy.hand3d}','script']`);
   }
   fs.writeFileSync(page, html);
 }
