@@ -1,98 +1,53 @@
-# Somya Ranjan Sahoo — Portfolio
+# Somya Ranjan Sahoo
 
-A static, dependency-free portfolio site (HTML, CSS and vanilla JavaScript). No build step is required to run or deploy it.
+**Data analyst in the making and software developer from Bhubaneswar, Odisha.**
+I turn messy data into clear answers, and I build things that work.
 
-## Structure
+[![Portfolio](https://img.shields.io/badge/Portfolio-somyaranjansahoo6422.github.io-FF6A3D?style=for-the-badge&logo=githubpages&logoColor=white)](https://somyaranjansahoo6422.github.io/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/)
+[![GitHub](https://img.shields.io/badge/GitHub-somyaranjansahoo6422-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/somyaranjansahoo6422)
 
-| Path | What it is |
+[![The portfolio's home screen](assets/og-image.jpg)](https://somyaranjansahoo6422.github.io/)
+
+## About me
+
+- B.Tech in Computer Science & Engineering at GITA Autonomous College, Bhubaneswar (2025 to 2029)
+- Seven years at Sainik School Bhubaneswar, with NCC training in the Navy and Army wings
+- Back-End / Python Developer Intern at The Entrepreneurship Network, with a letter of recommendation from the Director
+- Best Innovation Team at CHAKRAVYUH 1.0 National Hackathon, and a national finalist at India Innovates 2026 with my team, ASTRA-X
+- Working with Python, SQL, Excel and pandas, and building with FastAPI, Streamlit and Three.js
+
+## What you'll find on the site
+
+| Section | What's there |
 |---|---|
-| `index.html` | The portfolio page (hero, selected work and case studies, about, experience, credentials, contact) |
-| `privacy.html` | Privacy notice for the contact form |
-| `404.html` | Not-found page (used automatically by GitHub Pages) |
-| `styles.css` | All styles, light and dark themes |
-| `script.js` | Theme, navigation, project filters, contact form, image viewer |
-| `assets/img/*.webp` | Responsive images (480/720/960/1600 px widths) built from the original photos and screenshots |
-| `assets/Somya-Ranjan-Sahoo-Resume.pdf` | Resume (generated from `resume/resume.html`) |
-| `assets/og-image.jpg` | Link-preview image |
-| `.nojekyll` | Tells GitHub Pages to serve the files as they are |
-| `robots.txt`, `sitemap.xml` | Search-engine rules and page list |
-| `dev-server.js` | Local preview server |
-| `resume/` | Source for the resume PDFs (local only, ignored by git) |
+| **Data lab** | An analysis of 2,003 Indian toll plazas, an Excel dashboard, and a live SQL database you can query in your browser |
+| **Projects** | Case studies of VANTAGE: ZERO, GOD VIEW, UNSPOKEN, ANUMATI, the Smart Toll Plaza system and more |
+| **Experience and education** | Internships, school and college, with certificates you can open full size |
+| **Credentials** | 30 certificates and 12 awards and badges, 13 of them verifiable on Coursera |
+| **Resume** | Two one-page versions to download |
+| **Ask me anything** | A small chat that answers questions about my work |
+| **Contact** | A form that reaches my inbox |
 
-## Run locally
+## Website analytics
 
-```bash
-node dev-server.js
-```
+Measured with Google PageSpeed Insights on 7 November 2026. Google tests mobile on a simulated budget phone over slow 4G.
 
-Then open http://localhost:4321.
+| | Performance | Accessibility | Best Practices | SEO |
+|---|---|---|---|---|
+| **Mobile** | 96–100 | 100 | 100 | 100 |
+| **Desktop** | 100 | 100 | 100 | 100 |
 
-## Deploy (GitHub Pages)
+- **Speed on a phone:** the first screen appears in about 1 second and the main image in about 2.4 seconds on Google's slow-4G test. Repeat visits load from the device and appear about twice as fast.
+- **Weight:** about 190 KB for the first screen, with fonts trimmed to the characters the site uses.
+- **Search:** indexed on Google and Bing, with structured data marking it as my profile page.
+- **Privacy:** no tracking cookies, no ad scripts and no analytics trackers.
+- **Built with:** plain HTML, CSS and JavaScript, hosted on GitHub Pages.
 
-1. On GitHub open the repository, then **Settings > Pages**.
-2. Under **Build and deployment**, set **Source** to *Deploy from a branch*, **Branch** to `main` and the folder to `/ (root)`, then **Save**.
-3. After a minute or two the site is live at https://somyaranjansahoo6422.github.io/
+## Contact
 
-Every push to `main` then updates the site. The repository must stay public on a free GitHub plan.
-
-### What differs from a server you control
-
-- GitHub Pages cannot send custom headers, so the Content-Security-Policy lives in a `<meta>` tag at the top of each page. Change an inline `<script>` and its `sha256` hash in that tag must change too. `frame-ancestors` and `X-Frame-Options` have no equivalent there.
-- There is no built-in analytics.
-
-### Moving to a custom domain later
-
-1. Register the domain, then add it under **Settings > Pages > Custom domain** and follow the DNS records GitHub shows.
-2. Replace the `somyaranjansahoo6422.github.io` address in `index.html`, `robots.txt`, `sitemap.xml` and the resume sources.
-
-## Contact form (Web3Forms)
-
-With JavaScript on, the form posts to [Web3Forms](https://web3forms.com), which emails submissions to the inbox tied to the access key. The key sits in `data-w3f` on `#contactForm` in `index.html`. Web3Forms keys are made for use in a public page, so it is not a secret.
-
-- **Backup:** with JavaScript off, the form does a normal POST to [FormSubmit](https://formsubmit.co) instead. FormSubmit sends a one-time activation email to the inbox on its first submission.
-- **Spam protection:** a hidden honeypot field (`_honey`) plus required consent and validation.
-- To switch providers, change `data-w3f`, `action` and `data-endpoint` on `#contactForm`, and `connect-src` / `form-action` in the Content-Security-Policy.
-
-## Resume
-
-Edit `resume/resume.html`, then rebuild the PDF with Chrome (one A4 page):
-
-```bash
-"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe" --headless=new --no-pdf-header-footer --print-to-pdf="assets\Somya-Ranjan-Sahoo-Resume.pdf" "file:///%CD%/resume/resume.html"
-```
-
-## Images
-
-All site images are WebP files in `assets/img/` with several widths each, generated from the original files in `VIRUS/ACHIEVEMENTS & WORKS` and `VIRUS/PROJECTS`. The VECTOR screenshot is cropped to the app area (the original showed the desktop taskbar and browser tabs). The Smart Toll image uses only the map and ANPR-pipeline panels of `demo.png`.
-
-## Security note
-
-The toll project's local git remote (`✅TOLL_PLAZA-SYSTEM/.git/config`) contains a GitHub personal access token in plain text. Revoke it in GitHub → Settings → Developer settings → Personal access tokens, and use a credential manager instead.
+Send a message through the [contact form](https://somyaranjansahoo6422.github.io/#contact), or connect on [LinkedIn](https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/).
 
 ## License
 
-The MIT license in this repository covers the code only. Photos, certificates, resume files and other personal content belong to Somya Ranjan Sahoo and the people shown, and may not be reused without permission.
-
-## Publishing a change
-
-The pages load minified files, so after editing any `.css` or `.js` file run:
-
-```bash
-node build.js
-```
-
-It rebuilds the `.min` files, versions them so visitors never get a new page with an old cached file, and refreshes the Content-Security-Policy hashes. It needs [esbuild](https://esbuild.github.io).
-
-If the top of the page changes, regenerate its inline CSS first with `node tools/make-critical.js http://localhost:4321/`.
-
-Phones paint from that inline CSS while the full stylesheet loads alongside. `sw.js` keeps files on the device so repeat visits are fast; pages always come fresh from the network.
-
-## Search engines
-
-The site is verified in Google Search Console (`googlea8a28d004fcb0832.html`) and Bing Webmaster Tools (the `msvalidate.01` tag). Keep both.
-
-`040c3aa789e57448c9cb63ca82ecdfc7.txt` is the [IndexNow](https://www.indexnow.org) key. After publishing a change, tell Bing and other IndexNow engines straight away:
-
-```bash
-curl "https://api.indexnow.org/indexnow?url=https://somyaranjansahoo6422.github.io/&key=040c3aa789e57448c9cb63ca82ecdfc7"
-```
+The code is under the [MIT license](LICENSE). Photos, certificates, resume files and other personal content belong to Somya Ranjan Sahoo and the people shown, and may not be reused without permission.
