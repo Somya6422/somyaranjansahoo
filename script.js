@@ -623,7 +623,7 @@
       while (queue.length > 6) settle(queue.shift());
       // the block's resting place (without its waiting offset) decides which hand takes it
       var sideOf = function (el) { var r = el.getBoundingClientRect(), dx = el.classList.contains('hand-wait') ? (el._dx || 0) : 0; return sideTone({ left: r.left - dx, width: r.width }); };
-      var next = function (h) { for (var i = 0; i < queue.length; i++) if (sideOf(queue[i]) === h.tone) return queue.splice(i, 1)[0]; return null; };
+      var next = function (h) { for (var i = 0; i < queue.length; i++) if (sideOf(queue[i]) === h.tone) return queue.splice(i, 1)[0]; return queue.shift() || null; }; // its own side first, then whatever is left
       hands.forEach(function (h) {
         if (h.busy) return;
         var first = next(h);
@@ -640,6 +640,8 @@
     var io = new IntersectionObserver(function (entries) {
       var fresh = entries.filter(function (en) { return en.isIntersecting; }).map(function (en) { io.unobserve(en.target); prep(en.target); return en.target; });
       if (!fresh.length) return;
+      var seenAt = Date.now();
+      fresh.forEach(function (el) { el._seen = seenAt; });
       fresh.sort(function (a, b) { return a.getBoundingClientRect().top - b.getBoundingClientRect().top; });
       onBuilt(function () {
         if (!(window.RealHand && window.RealHand.ready)) { fresh.forEach(settle); return; } // no stand-in hand here either
@@ -649,6 +651,11 @@
       });
     }, { threshold: 0.2, rootMargin: '0px 0px -6% 0px' });
     waiting.forEach(function (el) { io.observe(el); });
+    // Safety net: however busy or slow the hands are, a block on screen never waits more than a few seconds.
+    setInterval(function () {
+      var now = Date.now();
+      blocks.forEach(function (el) { if (el._seen && !el._placed && !el.classList.contains('hand-held') && now - el._seen > 5000) settle(el); });
+    }, 1000);
   }
   if (building && 'IntersectionObserver' in window) sectionHands();
 
