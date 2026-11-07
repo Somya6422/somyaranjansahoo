@@ -19,10 +19,16 @@ const PAGES = [
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const abs = (u) => (/^(https?:|mailto:|#)/.test(u) ? u : '/' + u.replace(/^\.?\//, ''));
+// Homepage links that only work on the homepage: point them at the right page instead.
+const SECTION_PAGES = { 'toll-analysis': '/projects/india-toll-network-analysis/', 'toll-dashboard': '/projects/india-toll-network-analysis/' };
+const resolveHref = (u) => {
+  if (/^#project\//.test(u)) { const id = u.slice(9); const p = PAGES.find((x) => x.id === id); return p ? `/projects/${p.slug}/` : '/' + u; }
+  if (/^#/.test(u)) return SECTION_PAGES[u.slice(1)] || '/' + u;
+  return abs(u);
+};
 const fixHtml = (h) => h
   .replace(/(href|src)="(?!https?:|mailto:|#|\/)([^"]+)"/g, (m, a, u) => `${a}="/${u}"`)
-  .replace(/href="#project\/([\w-]+)"/g, (m, id) => `href="/projects/${(PAGES.find((p) => p.id === id) || { slug: '' }).slug}/"`)
-  .replace(/href="#([\w-]+)"/g, 'href="/#$1"');
+  .replace(/href="(#[\w\/-]+)"/g, (m, u) => `href="${resolveHref(u)}"`);
 const cut = (s, n) => (s.length <= n ? s : s.slice(0, s.lastIndexOf(' ', n - 1)).replace(/[,;:]$/, '') + '…');
 
 function extract(ids) {
@@ -106,7 +112,7 @@ function page(p, d, all, shell) {
   };
   const linkBtn = (l, first) => {
     const ext = /^https?:/.test(l.href);
-    return `<a class="btn ${first ? 'btn--primary' : 'btn--ghost'} btn--sm" href="${esc(abs(l.href))}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(l.label.replace(/\s*↗$/, ''))}${ext ? ' ↗' : ''}</a>`;
+    return `<a class="btn ${first ? 'btn--primary' : 'btn--ghost'} btn--sm" href="${esc(resolveHref(l.href))}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(l.label.replace(/\s*↗$/, ''))}${ext ? ' ↗' : ''}</a>`;
   };
   let body = '';
   if (d.kind === 'case') {
