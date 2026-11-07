@@ -2033,6 +2033,9 @@ body { background-color: var(--page-bg, var(--bg)); transition: background-color
 /* Performance pass: no blur filters on moving pieces, compositor-friendly pulses, promoted glow layers */
 .is-building.is-scattered { filter: none; }
 .hand-wait { filter: none; }
+/* Phones: blocks stay readable while they wait, and the hero slides out instead of jumping */
+.intro-lite .hand-wait { opacity: .6; }
+.intro-lite .stage .hand-wait:not(.hand-held) { transition: translate .3s var(--ease), rotate .3s var(--ease), opacity .3s var(--ease); }
 .is-building { transition-property: opacity, translate, rotate, scale; }
 .ambient span { will-change: transform; }
 @media (prefers-reduced-motion: no-preference) {

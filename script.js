@@ -525,8 +525,12 @@
   }
 
   // ---- Sections: two hands place every block as it scrolls into view (on every page load) ----
-  function sectionHands() {
-    var SEL = [
+  function sectionHands(phone) {
+    // Phones: the hero and the big blocks only. Text you are reading and forms you are filling never wait.
+    var SEL = phone ? [
+      '.stage__word', '.stage__portrait', '.status', '#hero-title', '.role', '.lede', '.hero__cta', '.socials', '.stage__rail',
+      '.section__head > *', '.group-title', '.certs__title', '.case', '.skill-group', '.cred-feature', '.journey__map', '.rvault__stack'
+    ].join(',') : [
       '.section__head > *', '.group-title', '.filters', '.viewtoggle', '.case', '.cards > .card',
       '.prose > p', '.prose__sub', '.principles li', '.remarks .quote', '.skill-group',
       '.timeline > li', '.cred-stats > div', '.certs__title', '.medals > li', '.cred-feature',
@@ -538,7 +542,7 @@
     // Never displace a block whose parent block is already displaced (offsets would stack).
     var blocks = all.filter(function (el) {
       for (var p = el.parentElement; p; p = p.parentElement) if (set.has(p)) return false;
-      return !el.closest('.stage');
+      return phone || !el.closest('.stage');
     });
     var small = window.innerWidth <= 760, k = small ? 0.45 : 1;
     blocks.forEach(function (el, i) {
@@ -620,7 +624,7 @@
     }
     function pump() {
       // Too much queued (fast scrolling)? Let the oldest settle on their own so nobody waits.
-      while (queue.length > 6) settle(queue.shift());
+      while (queue.length > (phone ? 10 : 6)) settle(queue.shift());
       // the block's resting place (without its waiting offset) decides which hand takes it
       var sideOf = function (el) { var r = el.getBoundingClientRect(), dx = el.classList.contains('hand-wait') ? (el._dx || 0) : 0; return sideTone({ left: r.left - dx, width: r.width }); };
       var next = function (h) { for (var i = 0; i < queue.length; i++) if (sideOf(queue[i]) === h.tone) return queue.splice(i, 1)[0]; return queue.shift() || null; }; // its own side first, then whatever is left
@@ -662,21 +666,14 @@
   // ---- Phones: the page shows finished first, and my hands arrive on the visitor's first touch or scroll ----
   // They cost the first load nothing at all: not one byte is fetched until someone starts using the page.
   if (root.classList.contains('intro-lite') && !(navigator.connection && navigator.connection.saveData) && 'IntersectionObserver' in window) (function () {
-    var asked = false, ready = false, said = false;
-    function hi() {
-      if (said || !ready) return;
-      said = true;
-      try { if (sessionStorage.getItem('handsHi')) return; sessionStorage.setItem('handsHi', '1'); } catch (e) {}
-      sayHi();
-    }
+    var asked = false;
     function bringHands() {
       if (asked) return;
       asked = true;
       loadHands().then(function (RH) {
         if (!RH || !RH.ready) return;
         Array.prototype.forEach.call(document.querySelectorAll('.reveal'), function (e) { e.classList.remove('reveal', 'in'); });
-        sectionHands();
-        ready = true; hi();
+        sectionHands(true);
       });
     }
     ['touchstart', 'pointerdown', 'scroll'].forEach(function (ev) {
