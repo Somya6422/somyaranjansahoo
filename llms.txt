@@ -16,12 +16,13 @@ The whole portfolio is one page, https://somyaranjansahoo6422.github.io/, and th
 
 ## Projects
 
-- [India Toll Network Analysis](https://github.com/somyaranjansahoo6422/india-toll-network-analysis): Data analysis of India's toll plazas: where they are, who runs them and whether the data can be trusted.
-- [Smart Toll Plaza Management and GIS Command Center](https://github.com/somyaranjansahoo6422/smart-toll-plaza-system): A toll operations prototype with live number-plate recognition and a Pan-India plaza map.
-- [VANTAGE: ZERO](https://github.com/somyaranjansahoo6422/Game-using-Wispr-Flow): A voice-controlled 3D combat flight game that runs in the browser.
-- [GOD VIEW](https://github.com/somyaranjansahoo6422/GOD-VIEW): An open-source-intelligence digital twin with live flights and satellites on a 3D globe, linked in a knowledge graph.
-- [UNSPOKEN](https://github.com/somyaranjansahoo6422/unspoken): A chest-mounted wearable that helps visually impaired users sense obstacles and lets non-verbal users speak through gestures.
-- [Student Attendance Management System](https://github.com/somyaranjansahoo6422/Student_Attendance_Management_System): A multi-role desktop app where students check in by scanning a QR code.
+- [India Toll Network Analysis](https://somyaranjansahoo6422.github.io/projects/india-toll-network-analysis/): Data analysis of India's toll plazas: where they are, who runs them and whether the data can be trusted. Code: https://github.com/somyaranjansahoo6422/india-toll-network-analysis
+- [Smart Toll Plaza Management and GIS Command Center](https://somyaranjansahoo6422.github.io/projects/smart-toll-plaza/): A toll operations prototype with live number-plate recognition and a Pan-India plaza map. Code: https://github.com/somyaranjansahoo6422/smart-toll-plaza-system
+- [VANTAGE: ZERO](https://somyaranjansahoo6422.github.io/projects/vantage-zero/): A voice-controlled 3D combat flight game that runs in the browser. Code: https://github.com/somyaranjansahoo6422/Game-using-Wispr-Flow
+- [GOD VIEW](https://somyaranjansahoo6422.github.io/projects/god-view/): An open-source-intelligence digital twin with live flights and satellites on a 3D globe, linked in a knowledge graph. Code: https://github.com/somyaranjansahoo6422/GOD-VIEW
+- [UNSPOKEN](https://somyaranjansahoo6422.github.io/projects/unspoken/): A chest-mounted wearable that helps visually impaired users sense obstacles and lets non-verbal users speak through gestures. Code: https://github.com/somyaranjansahoo6422/unspoken
+- [ANUMATI](https://somyaranjansahoo6422.github.io/projects/anumati/): A regulatory-clearance engine that models business licences as a dependency graph. Team project, Smart India Hackathon 2026 college round.
+- [Student Attendance Management System](https://somyaranjansahoo6422.github.io/projects/student-attendance-system/): A multi-role desktop app where students check in by scanning a QR code. Code: https://github.com/somyaranjansahoo6422/Student_Attendance_Management_System
 
 ## Profiles
 
