@@ -86,3 +86,13 @@ It rebuilds the `.min` files, versions them so visitors never get a new page wit
 If the top of the page changes, regenerate its inline CSS first with `node tools/make-critical.js http://localhost:4321/`.
 
 Phones paint from that inline CSS while the full stylesheet loads alongside. `sw.js` keeps files on the device so repeat visits are fast; pages always come fresh from the network.
+
+## Search engines
+
+The site is verified in Google Search Console (`googlea8a28d004fcb0832.html`) and Bing Webmaster Tools (the `msvalidate.01` tag). Keep both.
+
+`040c3aa789e57448c9cb63ca82ecdfc7.txt` is the [IndexNow](https://www.indexnow.org) key. After publishing a change, tell Bing and other IndexNow engines straight away:
+
+```bash
+curl "https://api.indexnow.org/indexnow?url=https://somyaranjansahoo6422.github.io/&key=040c3aa789e57448c9cb63ca82ecdfc7"
+```
