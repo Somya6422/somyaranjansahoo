@@ -83,7 +83,7 @@
   }
 
   // ---- the toll case study ----
-  fetch('assets/data/toll-results.json').then(function (r) { return r.json(); }).then(function (d) {
+  fetch('/assets/data/toll-results.json').then(function (r) { return r.json(); }).then(function (d) {
     var top = d.top_states.slice(0, 8), rest = d.top_states.slice(8).reduce(function (a, b) { return a + b.plazas; }, 0);
     var rows = top.map(function (s) { return { k: s.state, v: s.plazas, note: s.share_pct + '% of all plazas' }; });
     rows.push({ k: 'Other 18 states and UTs', v: rest, muted: true });
@@ -139,9 +139,9 @@
   function start() {
     if (loading) return loading;
     say('Starting a real SQL database in your browser…');
-    loading = fetch('assets/data/toll-plazas.json').then(function (r) { return r.json(); }).then(function (plazas) {
+    loading = fetch('/assets/data/toll-plazas.json').then(function (r) { return r.json(); }).then(function (plazas) {
       return new Promise(function (res, rej) {
-        worker = new Worker('assets/js/sql-worker.js');
+        worker = new Worker('/assets/js/sql-worker.js');
         worker.onerror = rej;
         worker.onmessage = function (e) { if (e.data.type === 'ready') res(); else rej(); };
         worker.postMessage({

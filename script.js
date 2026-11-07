@@ -211,7 +211,7 @@
     askLoad = new Promise(function (res) {
       if (window.AskMe) return res(window.AskMe);
       var sc = document.createElement('script');
-      sc.src = 'ask.js';
+      sc.src = '/ask.js';
       sc.onload = function () { res(window.AskMe || null); };
       sc.onerror = function () { res(null); };
       document.head.appendChild(sc);
@@ -224,7 +224,7 @@
     handsLoad = new Promise(function (res) {
       if (window.RealHand) return res(window.RealHand);
       var sc = document.createElement('script');
-      sc.src = 'hand3d.js';
+      sc.src = '/hand3d.js';
       sc.onload = function () { res(window.RealHand || null); };
       sc.onerror = function () { res(null); };
       document.head.appendChild(sc);
@@ -705,7 +705,7 @@
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
     var keepFiles = function () {
       ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (ev) { window.removeEventListener(ev, keepFiles); });
-      navigator.serviceWorker.register('sw.js').catch(function () {});
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
     };
     ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (ev) { window.addEventListener(ev, keepFiles, { passive: true }); });
   }
@@ -1467,7 +1467,7 @@
     experience: function () { Array.prototype.forEach.call(document.querySelectorAll('#experience .wrap:first-child .timeline > li'), function (li) { tLine(li.querySelector('h3').textContent + ' — ' + li.querySelector('.org').textContent); }); },
     education: function () { Array.prototype.forEach.call(document.querySelectorAll('.edu .timeline > li h3'), function (h) { var org = h.parentElement.querySelector('.org'); tLine(h.textContent + (org ? ' — ' + org.textContent : '')); }); },
     certs: function () { tLine(document.querySelectorAll('.cred').length + ' certificates · ' + document.querySelectorAll('.medal').length + ' awards & badges'); Array.prototype.slice.call(document.querySelectorAll('.medal')).slice(0, 6).forEach(function (m) { tLine('  ★ ' + m.querySelector('.medal__big').textContent + ' — ' + m.querySelector('.medal__what').textContent); }); tLine('Type "cd credentials" to see them all.', 'term__dim'); },
-    resume: function (arg) { var pl = /^pl|^place|^campus/i.test(arg || ''); tLine('Downloading resume' + (pl ? ' (placement format)…' : '…')); var a = document.createElement('a'); a.href = pl ? 'assets/Somya-Ranjan-Sahoo-Resume-Placement.pdf' : 'assets/Somya-Ranjan-Sahoo-Resume.pdf'; a.download = ''; document.body.appendChild(a); a.click(); a.remove(); },
+    resume: function (arg) { var pl = /^pl|^place|^campus/i.test(arg || ''); tLine('Downloading resume' + (pl ? ' (placement format)…' : '…')); var a = document.createElement('a'); a.href = pl ? '/assets/Somya-Ranjan-Sahoo-Resume-Placement.pdf' : '/assets/Somya-Ranjan-Sahoo-Resume.pdf'; a.download = ''; document.body.appendChild(a); a.click(); a.remove(); },
     contact: function () { tLink('6422somyaranjansahoo@gmail.com', 'mailto:6422somyaranjansahoo@gmail.com'); tLine('Or type "hire" to jump straight to the form.', 'term__dim'); },
     socials: function () { tLink('github.com/somyaranjansahoo6422', 'https://github.com/somyaranjansahoo6422'); tLink('linkedin.com/in/somya-ranjan-sahoo-109599312', 'https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/'); tLink('instagram.com/somya_ranjan__22', 'https://www.instagram.com/somya_ranjan__22/'); },
     ls: function () { tLine('work/  data/  about/  experience/  credentials/  resume/  contact/'); },
@@ -1932,7 +1932,7 @@
   // ---- Recruiter quick view: the whole profile in 60 seconds ----
   var qv = document.createElement('dialog');
   qv.className = 'qv'; qv.id = 'qv'; qv.setAttribute('aria-labelledby', 'qvName');
-  qv.innerHTML = '<div class="qv__head"><img class="qv__avatar" src="assets/img/profile-240.webp" loading="lazy" alt="Somya Ranjan Sahoo" width="64" height="64">' +
+  qv.innerHTML = '<div class="qv__head"><img class="qv__avatar" src="/assets/img/profile-240.webp" loading="lazy" alt="Somya Ranjan Sahoo" width="64" height="64">' +
     '<div><h2 class="qv__name" id="qvName">Somya Ranjan Sahoo</h2><p class="qv__role">Aspiring data analyst · Software developer · Python · SQL · Excel</p></div>' +
     '<button type="button" class="qv__close" aria-label="Close summary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
     '<div class="qv__body">' +
@@ -1945,7 +1945,7 @@
     '<div class="qv__block"><h3>Experience</h3><ul><li><strong>Python Developer Intern</strong> <span>· The Entrepreneurship Network · 3 months · letter of recommendation</span></li><li><strong>Python Programming Intern</strong> <span>· InternPe · 6 weeks</span></li></ul></div>' +
     '<div class="qv__block"><h3>Skills</h3><ul><li><strong>Languages</strong> <span>· Python, SQL, Node.js, C, HTML/CSS</span></li><li><strong>Tools</strong> <span>· FastAPI, Streamlit, OpenCV, pandas, Git, Excel</span></li><li><strong>Certificates</strong> <span>· 30, incl. Google Data Analysis with Python</span></li></ul></div>' +
     '<div class="qv__block qv__wide"><h3>Contact</h3><ul><li><a class="link" href="mailto:6422somyaranjansahoo@gmail.com">6422somyaranjansahoo@gmail.com</a> · <a class="link" href="https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a class="link" href="https://github.com/somyaranjansahoo6422" target="_blank" rel="noopener noreferrer">GitHub</a></li></ul></div>' +
-    '</div><div class="qv__foot"><a class="btn btn--primary btn--sm" href="assets/Somya-Ranjan-Sahoo-Resume.pdf" download>Download resume</a>' +
+    '</div><div class="qv__foot"><a class="btn btn--primary btn--sm" href="/assets/Somya-Ranjan-Sahoo-Resume.pdf" download>Download resume</a>' +
     '<button type="button" class="btn btn--ghost btn--sm" id="qvCopy">Copy as text</button><button type="button" class="btn btn--ghost btn--sm" id="qvPrint">Print</button>' +
     '<a class="btn btn--ghost btn--sm" href="#contact" id="qvContact">Contact me</a></div>';
   document.body.appendChild(qv);
@@ -2150,7 +2150,7 @@
   var dataSec = $('data');
   if (dataSec) {
     var labAsked = false;
-    var loadLab = function () { if (labAsked) return; labAsked = true; var sc = document.createElement('script'); sc.src = 'data-lab.js'; document.head.appendChild(sc); };
+    var loadLab = function () { if (labAsked) return; labAsked = true; var sc = document.createElement('script'); sc.src = '/data-lab.js'; document.head.appendChild(sc); };
     if ('IntersectionObserver' in window) {
       var labIo = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { labIo.disconnect(); loadLab(); } }, { rootMargin: '900px 0px' });
       labIo.observe(dataSec);
@@ -2196,7 +2196,7 @@
     // the QR encoder (24 KB) loads only when the footer comes near
     var drawQr = function () {
       var sc = document.createElement('script');
-      sc.src = 'assets/js/qrcode.min.js';
+      sc.src = '/assets/js/qrcode.min.js';
       sc.onload = function () {
         if (!window.qrcode) return;
         var qr = window.qrcode(0, 'M'); qr.addData(shareUrl); qr.make();
