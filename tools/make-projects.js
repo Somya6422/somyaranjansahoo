@@ -1,0 +1,246 @@
+// Builds one page per project in projects/<slug>/index.html from the case studies on the homepage.
+// Usage: node tools/make-projects.js   (needs puppeteer-core and a local Chrome), then node build.js
+// The homepage stays the single source: edit a case study there and run this again.
+const fs = require('fs');
+const path = require('path');
+const puppeteer = require('puppeteer-core');
+
+const SITE = 'https://somyaranjansahoo6422.github.io';
+const chrome = process.env.CHROME_PATH || process.env.LOCALAPPDATA + '/Google/Chrome/Application/chrome.exe';
+const PAGES = [
+  { id: 'toll', slug: 'smart-toll-plaza', title: 'Smart Toll Plaza System with Number-Plate Recognition' },
+  { id: 'vantage', slug: 'vantage-zero', title: 'VANTAGE: ZERO, a Voice-Controlled 3D Flight Game' },
+  { id: 'godview', slug: 'god-view', title: 'GOD VIEW, an OSINT Digital Twin on a 3D Globe' },
+  { id: 'unspoken', slug: 'unspoken', title: 'UNSPOKEN, an Assistive Wearable for Blind and Non-Verbal Users' },
+  { id: 'anumati', slug: 'anumati', title: 'ANUMATI, a Regulatory Clearance Engine' },
+  { id: 'attendance', slug: 'student-attendance-system', title: 'Student Attendance Management System with QR Check-In' },
+  { id: 'toll-analysis', slug: 'india-toll-network-analysis', title: 'India Toll Network Data Analysis with Python, SQL and Excel', data: true },
+];
+
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const abs = (u) => (/^(https?:|mailto:|#)/.test(u) ? u : '/' + u.replace(/^\.?\//, ''));
+const fixHtml = (h) => h
+  .replace(/(href|src)="(?!https?:|mailto:|#|\/)([^"]+)"/g, (m, a, u) => `${a}="/${u}"`)
+  .replace(/href="#project\/([\w-]+)"/g, (m, id) => `href="/projects/${(PAGES.find((p) => p.id === id) || { slug: '' }).slug}/"`)
+  .replace(/href="#([\w-]+)"/g, 'href="/#$1"');
+const cut = (s, n) => (s.length <= n ? s : s.slice(0, s.lastIndexOf(' ', n - 1)).replace(/[,;:]$/, '') + '…');
+
+function extract(ids) {
+  const doc = new DOMParser().parseFromString(window.__src, 'text/html');
+  const text = (el) => (el ? el.textContent.replace(/\s+/g, ' ').trim() : '');
+  const out = {};
+  for (const id of ids) {
+    const c = doc.getElementById(id);
+    if (!c) continue;
+    if (c.classList.contains('case')) {
+      const media = c.querySelector('.case__media');
+      const img = media && media.querySelector('img');
+      const desc = [...c.querySelectorAll('.case__body > p')].filter((p) => !p.className).map((p) => p.innerHTML.trim());
+      out[id] = {
+        kind: 'case',
+        kicker: text(c.querySelector('.case__kicker')),
+        name: text(c.querySelector('h3')),
+        purpose: text(c.querySelector('.case__purpose')),
+        desc,
+        chips: [...c.querySelectorAll('.case__body > .chips li')].map(text),
+        badge: text(media && media.querySelector('.badge')),
+        image: img && { src: img.getAttribute('src'), big: media.getAttribute('href'), alt: img.getAttribute('alt'), w: img.getAttribute('width'), h: img.getAttribute('height') },
+        study: [...c.querySelectorAll('.study__grid > div')].map((d) => ({ dt: text(d.querySelector('dt')), dd: d.querySelector('dd').innerHTML.trim() })),
+        gallery: [...c.querySelectorAll('.study__gallery a')].map((a) => { const i = a.querySelector('img'); return { big: a.getAttribute('href'), src: i.getAttribute('src'), alt: i.getAttribute('alt'), caption: a.getAttribute('data-caption') || '', w: i.getAttribute('width'), h: i.getAttribute('height') }; }),
+        links: [...c.querySelectorAll('.case__links a')].filter((a) => !a.getAttribute('href').startsWith('/projects/')).map((a) => ({ href: a.getAttribute('href'), label: text(a), play: a.hasAttribute('data-play'), caption: a.getAttribute('data-caption') || '' })),
+        loop: media && media.getAttribute('data-video'),
+      };
+    } else {
+      const dash = doc.getElementById('toll-dashboard');
+      const shot = dash.querySelector('.dl-shot img');
+      out[id] = {
+        kind: 'data',
+        name: text(c.querySelector('.dl-h')),
+        lede: c.querySelector('.dl-lede').innerHTML.trim(),
+        findings: [...c.querySelectorAll('.dl-finding')].map((p) => p.innerHTML.trim()),
+        stats: [...c.querySelectorAll('.dl-stats > div')].map((d) => ({ dt: text(d.querySelector('dt')), dd: text(d.querySelector('dd')) })),
+        lists: [...c.querySelectorAll('h4')].map((h) => ({ h: text(h), ul: h.nextElementSibling.innerHTML.trim() })),
+        links: [...c.querySelectorAll('.dl-links a')].filter((a) => !a.getAttribute('href').startsWith('/projects/')).map((a) => ({ href: a.getAttribute('href'), label: text(a) })),
+        dash: { lede: dash.querySelector('.dl-lede').innerHTML.trim(), finding: dash.querySelector('.dl-finding').innerHTML.trim(), img: { src: shot.getAttribute('src'), big: dash.querySelector('.dl-shot').getAttribute('href'), alt: shot.getAttribute('alt'), w: shot.getAttribute('width'), h: shot.getAttribute('height') }, link: [...dash.querySelectorAll('.dl-links a')].map((a) => ({ href: a.getAttribute('href'), label: text(a) })) },
+      };
+    }
+  }
+  return out;
+}
+
+function page(p, d, all, shell) {
+  const url = `${SITE}/projects/${p.slug}/`;
+  const name = d.name;
+  const lead = d.kind === 'case' ? d.purpose : d.lede.replace(/<[^>]+>/g, '');
+  const more = d.kind === 'case' ? (d.desc[0] || '').replace(/<[^>]+>/g, '') : '';
+  const description = cut(`${lead} ${more}`.trim(), 158);
+  const image = d.kind === 'case' ? d.image : d.dash.img;
+  const ogImage = SITE + abs(image.big || image.src);
+  const repo = (d.links || []).map((l) => l.href).find((h) => /github\.com/.test(h));
+  const ld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': d.kind === 'case' ? 'SoftwareSourceCode' : 'Article',
+        name, headline: p.title, description, url, image: ogImage,
+        author: { '@type': 'Person', name: 'Somya Ranjan Sahoo', url: SITE + '/' },
+        ...(repo ? { codeRepository: repo } : {}),
+        ...(d.chips && d.chips.length ? { keywords: d.chips.join(', ') } : { keywords: 'data analysis, pandas, SQL, Excel, data cleaning, India toll plazas' }),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Somya Ranjan Sahoo', item: SITE + '/' },
+          { '@type': 'ListItem', position: 2, name: d.kind === 'case' ? 'Projects' : 'Data lab', item: SITE + (d.kind === 'case' ? '/#work' : '/#data') },
+          { '@type': 'ListItem', position: 3, name, item: url },
+        ],
+      },
+    ],
+  };
+  const img = (i, extra) => `<img src="${abs(i.src)}" alt="${esc(i.alt || '')}" width="${i.w}" height="${i.h}"${extra || ''}>`;
+  const linkBtn = (l, first) => {
+    const ext = /^https?:/.test(l.href);
+    return `<a class="btn ${first ? 'btn--primary' : 'btn--ghost'} btn--sm" href="${esc(abs(l.href))}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(l.label.replace(/\s*↗$/, ''))}${ext ? ' ↗' : ''}</a>`;
+  };
+  let body = '';
+  if (d.kind === 'case') {
+    const reel = d.links.find((l) => l.play);
+    const actions = d.links.filter((l) => !l.play);
+    body += `<p class="proj__kicker mono">${esc(d.kicker)}</p>
+      <h1>${esc(name)}</h1>
+      <p class="proj__lede">${esc(d.purpose)}</p>
+      ${d.desc.map((h) => `<p class="proj__desc">${fixHtml(h)}</p>`).join('\n      ')}
+      ${d.badge ? `<p class="proj__badge"><span class="badge">${esc(d.badge)}</span></p>` : ''}
+      <ul class="chips chips--sm proj__chips" aria-label="Technologies">${d.chips.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
+      ${actions.length ? `<p class="proj__actions">${actions.map((l, i) => linkBtn(l, i === 0)).join(' ')}</p>` : ''}
+      <figure class="proj__media">${img(d.image, ' fetchpriority="high"')}</figure>
+      <div class="proj__grid">
+        ${d.study.map((s) => `<section class="proj__block"><h2>${esc(s.dt)}</h2><p>${fixHtml(s.dd)}</p></section>`).join('\n        ')}
+      </div>`;
+    if (reel) body += `
+      <h2 class="proj__h2">Watch the demo</h2>
+      <figure class="proj__media proj__video"><video controls preload="none" playsinline poster="${abs(d.image.src)}" src="${esc(abs(reel.href))}"></video>${reel.caption ? `<figcaption>${esc(reel.caption)}</figcaption>` : ''}</figure>`;
+    if (d.gallery.length) body += `
+      <h2 class="proj__h2">Screenshots</h2>
+      <div class="proj__gallery">
+        ${d.gallery.map((g) => `<figure><a href="${abs(g.big)}">${img(g, ' loading="lazy" decoding="async"')}</a><figcaption>${esc(g.caption)}</figcaption></figure>`).join('\n        ')}
+      </div>`;
+  } else {
+    body += `<p class="proj__kicker mono">Data analysis · Solo project</p>
+      <h1>${esc(name)}</h1>
+      <p class="proj__lede">${fixHtml(d.lede)}</p>
+      <div class="proj__grid proj__grid--2">${d.findings.map((f) => `<p class="dl-finding">${fixHtml(f)}</p>`).join('')}</div>
+      <dl class="dl-stats proj__stats">${d.stats.map((s) => `<div><dt>${esc(s.dt)}</dt><dd>${esc(s.dd)}</dd></div>`).join('')}</dl>
+      <div class="proj__grid proj__grid--2">
+        ${d.lists.map((l) => `<section class="proj__block"><h2>${esc(l.h)}</h2><ul>${fixHtml(l.ul)}</ul></section>`).join('\n        ')}
+      </div>
+      <p class="proj__actions">${d.links.map((l, i) => linkBtn(l, i === 0)).join(' ')}</p>
+      <h2 class="proj__h2">The same data as an Excel dashboard</h2>
+      <p class="proj__desc">${fixHtml(d.dash.lede)}</p>
+      <p class="dl-finding">${fixHtml(d.dash.finding)}</p>
+      <figure class="proj__media"><a href="${abs(d.dash.img.big)}">${img(d.dash.img, ' loading="lazy" decoding="async"')}</a></figure>
+      <p class="proj__actions">${d.dash.link.map((l, i) => linkBtn(l, i === 0)).join(' ')} <a class="btn btn--ghost btn--sm" href="/#data">See the charts and live SQL database</a></p>`;
+  }
+  const others = PAGES.filter((o) => o.slug !== p.slug).map((o) => `<li><a href="/projects/${o.slug}/"><strong>${esc(all[o.id].name)}</strong><span>${esc(all[o.id].kind === 'case' ? all[o.id].purpose : 'Data analysis of 2,003 Indian toll plazas with Python, SQL and Excel.')}</span></a></li>`).join('\n          ');
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  ${shell.csp}
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${esc(p.title)} | Somya Ranjan Sahoo</title>
+  <meta name="description" content="${esc(description)}">
+  <meta name="author" content="Somya Ranjan Sahoo">
+  <meta name="theme-color" content="#0b0d12">
+  <link rel="canonical" href="${url}">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Somya Ranjan Sahoo">
+  <meta property="og:title" content="${esc(p.title)}">
+  <meta property="og:description" content="${esc(description)}">
+  <meta property="og:url" content="${url}">
+  <meta property="og:image" content="${ogImage}">
+  <meta property="og:image:alt" content="${esc(image.alt || name)}">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/assets/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../styles.min.css">
+  ${shell.headScript}
+  <script type="application/ld+json">${JSON.stringify(ld)}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav scrolled">
+    <div class="wrap nav__inner">
+      <a class="brand" href="/">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span class="brand__name">Somya Ranjan Sahoo</span><span class="sr-only">, home</span>
+      </a>
+      <div class="nav__tools">
+        <a class="btn btn--ghost btn--sm" href="/#work">All projects</a>
+        ${shell.themeBtn}
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="proj">
+    <div class="wrap">
+      <nav class="proj__crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="${d.kind === 'case' ? '/#work' : '/#data'}">${d.kind === 'case' ? 'Projects' : 'Data lab'}</a><span aria-hidden="true">/</span><span aria-current="page">${esc(name)}</span></nav>
+      ${body}
+
+      <section class="proj__cta">
+        <h2>Want to talk about this project?</h2>
+        <p>I'm open to data internships, projects and hackathon teams.</p>
+        <p class="proj__actions"><a class="btn btn--primary btn--sm" href="/#contact">Contact me</a> <a class="btn btn--ghost btn--sm" href="/">See the full portfolio</a></p>
+      </section>
+
+      <section class="proj__more" aria-labelledby="more-title">
+        <h2 id="more-title">More projects</h2>
+        <ul>
+          ${others}
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <p>© 2026 Somya Ranjan Sahoo</p>
+      <nav class="footer__links" aria-label="Footer">
+        <a href="/">Portfolio</a>
+        <a href="/#contact">Contact</a>
+        <a href="https://github.com/somyaranjansahoo6422" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../script.min.js" defer></script>
+</body>
+</html>
+`;
+}
+
+(async () => {
+  const src = fs.readFileSync('index.html', 'utf8');
+  const privacy = fs.readFileSync('privacy.html', 'utf8');
+  const shell = {
+    csp: privacy.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)[0],
+    headScript: privacy.match(/<script>[\s\S]*?<\/script>/)[0],
+    themeBtn: privacy.match(/<button class="icon-btn" id="themeToggle"[\s\S]*?<\/button>/)[0],
+  };
+  const browser = await puppeteer.launch({ executablePath: chrome, headless: 'new' });
+  const tab = await browser.newPage();
+  await tab.goto('about:blank');
+  await tab.evaluate((s) => { window.__src = s; }, src);
+  const data = await tab.evaluate(extract, PAGES.map((p) => p.id));
+  await browser.close();
+  for (const p of PAGES) {
+    if (!data[p.id]) throw new Error('missing on the homepage: ' + p.id);
+    const dir = path.join('projects', p.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), page(p, data[p.id], data, shell));
+    console.log('projects/' + p.slug + '/');
+  }
+})().catch((e) => { console.error(e); process.exit(1); });

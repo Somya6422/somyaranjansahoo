@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'sha256-v4hv6ZfQVuRcMr7Sy1AnZH44LhtXQBidTsbVK5A6d98=' 'sha256-QTKUewccu4vymS6kCMDNSDtay0EPB0g5P4r34XDZfdQ='; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://formsubmit.co https://api.web3forms.com https://api.github.com; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>India Toll Network Data Analysis with Python, SQL and Excel | Somya Ranjan Sahoo</title>
+  <meta name="description" content="My toll project came with a registry of 2,003 plazas. I treated it as a dataset and asked: where are India's tolls, who runs them, and can the data be…">
+  <meta name="author" content="Somya Ranjan Sahoo">
+  <meta name="theme-color" content="#0b0d12">
+  <link rel="canonical" href="https://somyaranjansahoo6422.github.io/projects/india-toll-network-analysis/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Somya Ranjan Sahoo">
+  <meta property="og:title" content="India Toll Network Data Analysis with Python, SQL and Excel">
+  <meta property="og:description" content="My toll project came with a registry of 2,003 plazas. I treated it as a dataset and asked: where are India's tolls, who runs them, and can the data be…">
+  <meta property="og:url" content="https://somyaranjansahoo6422.github.io/projects/india-toll-network-analysis/">
+  <meta property="og:image" content="https://somyaranjansahoo6422.github.io/assets/img/proj-toll-dashboard-1380.webp">
+  <meta property="og:image:alt" content="Excel dashboard with a state selector, six number tiles, auto insights and suggestions, and four charts of India's toll plazas">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/assets/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../styles.min.css?v=10af7ed9">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","name":"India's toll network, in data","headline":"India Toll Network Data Analysis with Python, SQL and Excel","description":"My toll project came with a registry of 2,003 plazas. I treated it as a dataset and asked: where are India's tolls, who runs them, and can the data be…","url":"https://somyaranjansahoo6422.github.io/projects/india-toll-network-analysis/","image":"https://somyaranjansahoo6422.github.io/assets/img/proj-toll-dashboard-1380.webp","author":{"@type":"Person","name":"Somya Ranjan Sahoo","url":"https://somyaranjansahoo6422.github.io/"},"codeRepository":"https://github.com/somyaranjansahoo6422/india-toll-network-analysis","keywords":"data analysis, pandas, SQL, Excel, data cleaning, India toll plazas"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Somya Ranjan Sahoo","item":"https://somyaranjansahoo6422.github.io/"},{"@type":"ListItem","position":2,"name":"Data lab","item":"https://somyaranjansahoo6422.github.io/#data"},{"@type":"ListItem","position":3,"name":"India's toll network, in data","item":"https://somyaranjansahoo6422.github.io/projects/india-toll-network-analysis/"}]}]}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav scrolled">
+    <div class="wrap nav__inner">
+      <a class="brand" href="/">
+        <span class="brand__mark" aria-hidden="true">S</span>
+        <span class="brand__name">Somya Ranjan Sahoo</span><span class="sr-only">, home</span>
+      </a>
+      <div class="nav__tools">
+        <a class="btn btn--ghost btn--sm" href="/#work">All projects</a>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch to dark theme">
+          <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="proj">
+    <div class="wrap">
+      <nav class="proj__crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/#data">Data lab</a><span aria-hidden="true">/</span><span aria-current="page">India's toll network, in data</span></nav>
+      <p class="proj__kicker mono">Data analysis · Solo project</p>
+      <h1>India's toll network, in data</h1>
+      <p class="proj__lede">My toll project came with a registry of 2,003 plazas. I treated it as a dataset and asked: where are India's tolls, who runs them, and can the data be trusted?</p>
+      <div class="proj__grid proj__grid--2"><p class="dl-finding"><strong>Main finding:</strong> just four states hold 53.6% of India's toll plazas, and 159 records had to be fixed or flagged before the numbers could be trusted.</p><p class="dl-finding"><strong>My recommendation:</strong> start any toll-spacing review in Rajasthan, Uttar Pradesh, Madhya Pradesh and Haryana. Those four hold 59% of the 582 plazas within 10 km of another, and 55% of Haryana's plazas sit that close. Add traffic data before acting, because this shows location, not how busy a plaza is.</p></div>
+      <dl class="dl-stats proj__stats"><div><dt>Plazas after cleaning</dt><dd>1,997</dd></div><div><dt>States and UTs</dt><dd>26</dd></div><div><dt>In just 4 states</dt><dd>53.6%</dd></div><div><dt>Records fixed or flagged</dt><dd>159</dd></div></dl>
+      <div class="proj__grid proj__grid--2">
+        <section class="proj__block"><h2>What I had to clean</h2><ul><li><strong>16 spellings</strong> of 7 funding types (Conc, Conc., CONC, Concessio…)</li>
+                <li><strong>2 longitudes</strong> that lost their decimal point (731669180 → 73.1669180)</li>
+                <li><strong>8 plazas</strong> placed 650–1,770 km outside their own state, such as Uttar Pradesh plazas with Chennai's coordinates</li>
+                <li><strong>25 plazas</strong> sharing an exact coordinate with a different plaza, a copy-paste sign</li>
+                <li><strong>6 duplicate records</strong> under different codes, and 1 cut-off state name</li></ul></section>
+        <section class="proj__block"><h2>How I did it, and the limits</h2><ul><li>Profiled and cleaned with <strong>pandas</strong>, logging every change</li>
+                <li>Caught bad coordinates by distance from each state's median, with no map files needed</li>
+                <li>Answered the questions in <strong>SQL</strong> with CTEs and window functions, written for MySQL 8 and run on SQLite</li>
+                <li>Limits: a May 2026 snapshot with no traffic or revenue, so it shows where plazas are, not how busy they are</li></ul></section>
+      </div>
+      <p class="proj__actions"><a class="btn btn--primary btn--sm" href="https://github.com/somyaranjansahoo6422/india-toll-network-analysis" target="_blank" rel="noopener noreferrer">Code on GitHub ↗</a> <a class="btn btn--ghost btn--sm" href="https://github.com/somyaranjansahoo6422/smart-toll-plaza-system" target="_blank" rel="noopener noreferrer">The toll system ↗</a> <a class="btn btn--ghost btn--sm" href="https://github.com/somyaranjansahoo6422/india-toll-network-analysis/blob/main/analysis.py" target="_blank" rel="noopener noreferrer">The Python ↗</a> <a class="btn btn--ghost btn--sm" href="https://github.com/somyaranjansahoo6422/india-toll-network-analysis/blob/main/queries.sql" target="_blank" rel="noopener noreferrer">The SQL ↗</a> <a class="btn btn--ghost btn--sm" href="https://github.com/somyaranjansahoo6422/india-toll-network-analysis/blob/main/cleaning_log.csv" target="_blank" rel="noopener noreferrer">Cleaning log ↗</a></p>
+      <h2 class="proj__h2">The same data as an Excel dashboard</h2>
+      <p class="proj__desc">A business-style view of the toll registry. Pick a state from the dropdown and the tiles and charts update, all from live formulas on the cleaned data.</p>
+      <p class="dl-finding"><strong>Main finding:</strong> states run their tolls very differently. 72% of Karnataka's 138 plazas are privately run, against 17% of Odisha's 35.</p>
+      <figure class="proj__media"><a href="/assets/img/proj-toll-dashboard-1380.webp"><img src="/assets/img/proj-toll-dashboard-960.webp" alt="Excel dashboard with a state selector, six number tiles, auto insights and suggestions, and four charts of India's toll plazas" width="960" height="916" loading="lazy" decoding="async"></a></figure>
+      <p class="proj__actions"><a class="btn btn--primary btn--sm" href="/assets/data/india-toll-dashboard.xlsx">Download the workbook</a> <a class="btn btn--ghost btn--sm" href="/#data">See the charts and live SQL database</a></p>
+
+      <section class="proj__cta">
+        <h2>Want to talk about this project?</h2>
+        <p>I'm open to data internships, projects and hackathon teams.</p>
+        <p class="proj__actions"><a class="btn btn--primary btn--sm" href="/#contact">Contact me</a> <a class="btn btn--ghost btn--sm" href="/">See the full portfolio</a></p>
+      </section>
+
+      <section class="proj__more" aria-labelledby="more-title">
+        <h2 id="more-title">More projects</h2>
+        <ul>
+          <li><a href="/projects/smart-toll-plaza/"><strong>Smart Toll Plaza Management &amp; GIS Command Center</strong><span>An NHAI-style toll operations prototype: live number-plate recognition, a Pan-India plaza map and role-based reporting.</span></a></li>
+          <li><a href="/projects/vantage-zero/"><strong>VANTAGE: ZERO</strong><span>A voice-controlled 3D combat flight game that runs in the browser.</span></a></li>
+          <li><a href="/projects/god-view/"><strong>GOD VIEW</strong><span>An open-source-intelligence digital twin: live flights and satellites on a 3D globe, linked in a knowledge graph.</span></a></li>
+          <li><a href="/projects/unspoken/"><strong>UNSPOKEN</strong><span>A chest-mounted wearable that helps visually impaired users sense obstacles and lets non-verbal users speak through gestures.</span></a></li>
+          <li><a href="/projects/anumati/"><strong>ANUMATI</strong><span>A regulatory-clearance engine that models business licences as a dependency graph.</span></a></li>
+          <li><a href="/projects/student-attendance-system/"><strong>Student Attendance Management System</strong><span>A multi-role desktop app where students check in by scanning a QR code on their phone.</span></a></li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <p>© 2026 Somya Ranjan Sahoo</p>
+      <nav class="footer__links" aria-label="Footer">
+        <a href="/">Portfolio</a>
+        <a href="/#contact">Contact</a>
+        <a href="https://github.com/somyaranjansahoo6422" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/somya-ranjan-sahoo-109599312/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="../../script.min.js?v=3b5393bf" defer></script>
+</body>
+</html>

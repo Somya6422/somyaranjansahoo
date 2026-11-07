@@ -24,7 +24,7 @@ for (const name of ['ask', 'data-lab', 'hand3d']) {
 }
 
 let main = read('script.js');
-for (const [name, url] of Object.entries(lazy)) main = main.split(`'${name}.js'`).join(`'${url}'`);
+for (const [name, url] of Object.entries(lazy)) main = main.split(`'/${name}.js'`).join(`'/${url}'`).split(`'${name}.js'`).join(`'${url}'`);
 const scriptOut = js(main);
 fs.writeFileSync('script.min.js', scriptOut);
 
@@ -36,13 +36,18 @@ const v = { css: version(styleOut), js: version(scriptOut) };
 // Fonts stay outside the phone-only block because @font-face cannot sit inside @media.
 const critical = css(read('critical.css'));
 
+// Every page that loads the shared files: the homepage, the privacy and 404 pages, and each project page.
+const pages = ['index.html', 'privacy.html', '404.html'].concat(
+  fs.existsSync('projects') ? fs.readdirSync('projects').map((d) => `projects/${d}/index.html`).filter((f) => fs.existsSync(f)) : []
+);
+
 const headScript = (html) => (html.match(/<script>([\s\S]*?)<\/script>/) || [])[1];
 const otherHash = sha(headScript(read('privacy.html')));
 
-for (const page of ['index.html', 'privacy.html', '404.html']) {
+for (const page of pages) {
   let html = read(page);
-  html = html.replace(/((?:href|src)=")styles(?:\.min)?\.css(?:\?v=[0-9a-f]+)?(")/g, `$1styles.min.css?v=${v.css}$2`);
-  html = html.replace(/((?:href|src)=")script(?:\.min)?\.js(?:\?v=[0-9a-f]+)?(")/g, `$1script.min.js?v=${v.js}$2`);
+  html = html.replace(/((?:href|src)="(?:\.\.\/)*)styles(?:\.min)?\.css(?:\?v=[0-9a-f]+)?(")/g, `$1styles.min.css?v=${v.css}$2`);
+  html = html.replace(/((?:href|src)="(?:\.\.\/)*)script(?:\.min)?\.js(?:\?v=[0-9a-f]+)?(")/g, `$1script.min.js?v=${v.js}$2`);
   if (page === 'index.html') {
     html = html.replace(/(<style id="critical">)[\s\S]*?(<\/style>)/, (m, a, b) => a + critical + b);
     html = html.replace(/style-src 'self'( 'sha256-[^']+')?/, `style-src 'self' 'sha256-${sha(critical)}'`);
@@ -50,9 +55,9 @@ for (const page of ['index.html', 'privacy.html', '404.html']) {
   fs.writeFileSync(page, html);
 }
 
-// The hash of index.html's head script is listed on all three pages.
+// The hash of index.html's head script is listed on every page.
 const indexHash = sha(headScript(read('index.html')));
-for (const page of ['index.html', 'privacy.html', '404.html']) {
+for (const page of pages) {
   const html = read(page).replace(/(script-src [^;]*?)'sha256-([^']+)'( 'sha256-([^']+)')?/, (m, start, a, _b, b) => {
     const keep = [a, b].includes(otherHash) ? otherHash : otherHash;
     return `${start}'sha256-${indexHash}' 'sha256-${keep}'`;
