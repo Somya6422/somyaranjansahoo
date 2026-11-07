@@ -2463,3 +2463,18 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1400px;
   .cred-feature__img { border-right: 0; border-bottom: 1px solid var(--line); }
   .cred-feature__img img { max-width: 460px; }
 }
+
+/* Data lab uses the full width on wider screens instead of leaving the right side empty */
+@media (min-width: 900px) {
+  #data .section__intro, .dl-lede { max-width: none; }
+  .dl-finding { max-width: none; }
+  .dl-findings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .dl-findings .dl-finding { margin: 0; }
+  #toll-dashboard { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: 1fr repeat(4, auto) 1fr; column-gap: 36px; }
+  #toll-dashboard > * { grid-column: 1; }
+  #toll-dashboard > .dl-h { grid-row: 2; }
+  #toll-dashboard > .dl-lede { grid-row: 3; }
+  #toll-dashboard > .dl-finding { grid-row: 4; }
+  #toll-dashboard > .dl-links { grid-row: 5; }
+  #toll-dashboard > .dl-shot { grid-column: 2; grid-row: 1 / -1; margin: 0; }
+}
